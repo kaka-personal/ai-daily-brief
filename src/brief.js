@@ -197,7 +197,8 @@ async function buildBrief(items) {
     const section = sections[st.section];
     const story = {
       title: String(st.title || "").trim(),
-      items: [...new Set(st.items || [])].map((n) => items[n - 1]).filter(Boolean),
+      // The model sometimes returns a bare number or numeric strings instead of an array.
+      items: [...new Set([].concat(st.items ?? []).map(Number))].map((n) => items[n - 1]).filter(Boolean),
     };
     if (!section) console.warn(`[warn] unknown section ${st.section} for "${story.title}"`);
     else if (story.title && story.items.length) section.stories.push(story);
