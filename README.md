@@ -26,7 +26,8 @@ npm run dry       # 调用模型生成早报，只打印不创建 Issue（需先
 
 ## 配置
 
-- `sources.json`：RSS 源、Hacker News 关键词和最低分数、回看时长、最大条数
+- `sources.json`：RSS 源、Hacker News 关键词和最低分数、回看时长、最大条数、首个栏目名（`highlightsTitle`）
+- 生成流程：模型先挑选并分组 → 抓取入选新闻的原文 → 逐条基于原文生成中文摘要、要点和"为什么重要"；数据写入 `docs/data/<日期>.json`，页面据此渲染卡片和详情弹窗
 - `OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL`：任何 OpenAI 兼容的 `/chat/completions` 接口都可以用
 - `BRIEF_TZ`：日期所用的时区，默认 `Asia/Shanghai`
 - 推送时间：修改 `.github/workflows/daily-brief.yml` 里的 cron（使用 UTC 时间）

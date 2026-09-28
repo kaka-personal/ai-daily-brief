@@ -1,6 +1,7 @@
 {
   "lookbackHours": 24,
   "maxItems": 80,
+  "highlightsTitle": "今日要点",
   "feeds": [
     { "name": "OpenAI", "url": "https://openai.com/news/rss.xml" },
     { "name": "Google DeepMind", "url": "https://deepmind.google/blog/rss.xml" },

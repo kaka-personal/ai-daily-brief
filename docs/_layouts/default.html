@@ -31,19 +31,38 @@
     </a>
   </header>
 
-  <main class="board" id="board" data-date="{{ brief_date }}">
+  <main class="board" id="board" data-date="{{ brief_date }}" data-src="{{ '/data/' | relative_url }}{{ brief_date }}.json">
     {{ content }}
   </main>
 
   <footer class="footer" id="footer">Updated daily at 08:00 (UTC+8) · GitHub Actions + Pages</footer>
 
+  <dialog class="modal" id="modal">
+    <article class="modal-box">
+      <button class="modal-x" type="button" aria-label="Close">&times;</button>
+      <span class="modal-tag" id="m-tag"></span>
+      <h3 id="m-title"></h3>
+      <p class="modal-sum" id="m-sum"></p>
+      <section id="m-points-wrap">
+        <h4>Key points</h4>
+        <ul id="m-points"></ul>
+      </section>
+      <section class="modal-why" id="m-why-wrap">
+        <h4>Why it matters</h4>
+        <p id="m-why"></p>
+      </section>
+      <p class="modal-note" id="m-note" hidden>Written from the feed summary only: the original page could not be fetched.</p>
+      <h4>Sources</h4>
+      <ul class="modal-sources" id="m-sources"></ul>
+    </article>
+  </dialog>
+
   <script>
-    // Turn each "## section" + list into a colored card with numbered rows.
+    // Render the brief from data/<date>.json as colored cards; a row opens the detail dialog.
+    // Without the JSON (or JavaScript) the Markdown content above stays visible as a fallback.
     (function () {
       var board = document.getElementById("board");
-      var date = board.getAttribute("data-date");
-      var headings = Array.prototype.slice.call(board.querySelectorAll(":scope > h2"));
-      if (!headings.length) return;
+      var modal = document.getElementById("modal");
 
       function el(tag, cls, text) {
         var e = document.createElement(tag);
@@ -52,60 +71,90 @@
         return e;
       }
 
-      var cards = headings.map(function (h, i) {
-        var list = h.nextElementSibling;
-        while (list && list.tagName !== "UL" && list.tagName !== "H2") list = list.nextElementSibling;
-        var items = list && list.tagName === "UL" ? Array.prototype.slice.call(list.children) : [];
-        var title = h.textContent.trim();
+      function link(href, cls, text) {
+        var a = el("a", cls, text);
+        a.href = href; a.target = "_blank"; a.rel = "noopener";
+        return a;
+      }
 
-        var card = el("section", "card c" + (i % 8));
-        card.id = h.id || "s" + i;
-        var head = el("header", "card-head");
-        head.appendChild(el("span", "ico", title.charAt(0)));
-        var meta = el("div", "card-meta");
-        var name = el("div", "card-name");
-        name.appendChild(el("h2", null, title));
-        if (i === 0) name.appendChild(el("span", "tag", "TOP"));
-        meta.appendChild(name);
-        meta.appendChild(el("small", null, items.length + " items · " + date));
-        head.appendChild(meta);
-        card.appendChild(head);
+      function openStory(story, section) {
+        document.getElementById("m-tag").textContent = section;
+        document.getElementById("m-title").textContent = story.title;
+        document.getElementById("m-sum").textContent = story.summary;
 
-        var rows = el("ol", "rows");
-        items.forEach(function (li, k) {
-          var strong = li.querySelector("strong");
-          var links = Array.prototype.slice.call(li.querySelectorAll("a"));
-          var headline = strong ? strong.textContent.trim() : "";
-          var clone = li.cloneNode(true);
-          Array.prototype.forEach.call(clone.querySelectorAll("strong, a"), function (x) { x.remove(); });
-          var desc = clone.textContent.replace(/^\s*[:：]\s*/, "").replace(/[\s·,，、]+$/, "").trim();
+        var points = document.getElementById("m-points");
+        points.innerHTML = "";
+        story.points.forEach(function (p) { points.appendChild(el("li", null, p)); });
+        document.getElementById("m-points-wrap").hidden = !story.points.length;
+        document.getElementById("m-why").textContent = story.why;
+        document.getElementById("m-why-wrap").hidden = !story.why;
+        document.getElementById("m-note").hidden = story.grounded;
 
-          var row = el("li", "row");
-          row.appendChild(el("span", "n", k + 1));
-          var body = el("div", "row-body");
-          var a = el("a", "t", headline || desc);
-          if (links[0]) { a.href = links[0].href; a.target = "_blank"; a.rel = "noopener"; }
-          body.appendChild(a);
-          links.slice(1).forEach(function (l, j) {
-            var extra = el("a", "src", "#" + (j + 2));
-            extra.href = l.href; extra.target = "_blank"; extra.rel = "noopener";
-            body.appendChild(extra);
-          });
-          if (headline && desc) body.appendChild(el("p", "d", desc));
-          row.appendChild(body);
-          rows.appendChild(row);
+        var sources = document.getElementById("m-sources");
+        sources.innerHTML = "";
+        story.sources.forEach(function (s) {
+          var li = el("li");
+          var info = el("div", "src-info");
+          info.appendChild(el("span", "src-name", s.name));
+          info.appendChild(el("span", "src-title", s.title));
+          li.appendChild(info);
+          var actions = el("div", "src-actions");
+          actions.appendChild(link(s.url, "btn primary", "Read original ↗"));
+          actions.appendChild(link("https://translate.google.com/translate?sl=auto&tl=zh-CN&u=" + encodeURIComponent(s.url), "btn", "Translate ↗"));
+          li.appendChild(actions);
+          sources.appendChild(li);
         });
-        var panel = el("div", "panel");
-        panel.appendChild(rows);
-        card.appendChild(panel);
-        return card;
+
+        modal.showModal();
+        modal.querySelector(".modal-box").scrollTop = 0;
+      }
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal || e.target.classList.contains("modal-x")) modal.close();
       });
 
-      var note = board.querySelector(":scope > p:last-of-type");
-      board.innerHTML = "";
-      cards.forEach(function (c) { board.appendChild(c); });
-      if (note) document.getElementById("footer").textContent = note.textContent + " · Updated daily at 08:00 (UTC+8)";
-      board.classList.add("ready");
+      function render(brief) {
+        board.innerHTML = "";
+        brief.sections.forEach(function (sec, i) {
+          var card = el("section", "card c" + (i % 8));
+          var head = el("header", "card-head");
+          head.appendChild(el("span", "ico", sec.title.charAt(0)));
+          var meta = el("div", "card-meta");
+          var name = el("div", "card-name");
+          name.appendChild(el("h2", null, sec.title));
+          if (i === 0) name.appendChild(el("span", "tag", "TOP"));
+          meta.appendChild(name);
+          meta.appendChild(el("small", null, sec.stories.length + " items · " + brief.date));
+          head.appendChild(meta);
+          card.appendChild(head);
+
+          var rows = el("ol", "rows");
+          sec.stories.forEach(function (story, k) {
+            var row = el("li", "row");
+            row.tabIndex = 0;
+            row.setAttribute("role", "button");
+            row.appendChild(el("span", "n", k + 1));
+            var body = el("div", "row-body");
+            body.appendChild(el("span", "t", story.title));
+            if (story.summary) body.appendChild(el("p", "d", story.summary));
+            row.appendChild(body);
+            row.addEventListener("click", function () { openStory(story, sec.title); });
+            row.addEventListener("keydown", function (e) { if (e.key === "Enter") openStory(story, sec.title); });
+            rows.appendChild(row);
+          });
+          var panel = el("div", "panel");
+          panel.appendChild(rows);
+          card.appendChild(panel);
+          board.appendChild(card);
+        });
+        document.getElementById("footer").textContent = brief.footer + " · Updated daily at 08:00 (UTC+8)";
+        board.classList.add("ready");
+      }
+
+      fetch(board.getAttribute("data-src"))
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error(r.status)); })
+        .then(render)
+        .catch(function () {});
     })();
   </script>
 </body>

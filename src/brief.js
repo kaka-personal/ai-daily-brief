@@ -14,7 +14,7 @@ const since = Date.now() - config.lookbackHours * 3600 * 1000;
 
 async function fetchText(url) {
   const res = await fetch(url, {
-    headers: { "user-agent": "ai-daily-brief/1.0 (+github actions)" },
+    headers: { "user-agent": "Mozilla/5.0 (compatible; ai-daily-brief/1.0; +github actions)" },
     signal: AbortSignal.timeout(20000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -31,6 +31,7 @@ function decode(s = "") {
     .replace(/&#39;|&apos;/g, "'")
     .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
     .replace(/&amp;/g, "&")
+    .replace(/<[^>]+>/g, " ") // entity-escaped HTML (Atom type="html") becomes tags only after unescaping
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -101,38 +102,45 @@ async function collect() {
 
 // ---------- summarizing ----------
 
-const SYSTEM_PROMPT = `You are an editor producing a daily AI news brief for a software engineer.
-Write the entire brief in Simplified Chinese, formatted as GitHub Markdown.
-
-Structure:
-1. "## 今日要点" - the 3 to 5 most important stories, one or two sentences each, explaining why they matter.
-2. Then group the remaining noteworthy items under a few "##" topic headings (for example models and products, research, open source and tools, industry). Pick headings that fit the day's news; skip empty ones.
-3. Every item in every section, including "## 今日要点", is one bullet: a bold short Chinese title, a one-sentence summary, then the original link as [source](url). An item without a link is not allowed.
+// Stage 1: pick and group stories. The model only returns item numbers, so every story keeps its real links.
+const PLAN_PROMPT = `You are the editor of a daily AI news brief for software engineers. You receive numbered news items.
+Select the noteworthy AI stories and group them. Reply with JSON only, no Markdown fences:
+{"sections":[{"title":"...","stories":[{"title":"...","items":[1,4]}]}]}
 
 Rules:
-- Only use the items provided. Do not invent facts, numbers or links.
-- Merge items that cover the same story into one bullet with multiple links, separated by " · ". Never use the "|" character anywhere, because it renders as a table.
-- Drop marketing fluff, duplicates and items unrelated to AI.
+- The first section must be titled "${config.highlightsTitle}" and hold the 3 to 5 most important stories.
+- Then 2 to 5 topic sections with short Simplified Chinese titles that fit the day's news (for example models and products, research, open source and tools, industry). Skip empty ones.
+- Each story appears once in the whole brief. "items" lists the numbers of the input items that cover it; merge items about the same story.
+- "title" is a short Simplified Chinese headline. Keep product and model names in their original language.
+- Drop marketing fluff, duplicates and items unrelated to AI.`;
+
+// Stage 2: write one story from its source material (the fetched article when available).
+const DETAIL_PROMPT = `You write one entry of a daily AI news brief in Simplified Chinese. You receive a headline and its source material.
+Reply with JSON only, no Markdown fences:
+{"summary":"...","points":["...","..."],"why":"..."}
+
+- summary: one sentence, at most 60 Chinese characters.
+- points: 3 to 5 key facts from the source material, one sentence each.
+- why: one or two sentences on why it matters to software engineers.
+- Only use facts found in the source material. Do not invent numbers, names or quotes. If the material is thin, write fewer points.
 - Keep product and model names in their original language.`;
 
-async function summarize(items, date) {
+const ARTICLE_CHARS = 6000;
+
+async function chat(system, user) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY is required (or pass --no-ai)");
-  const list = items
-    .map((it, i) => `${i + 1}. [${it.source}] ${it.title}\n   ${it.link}\n   ${it.summary}`)
-    .join("\n");
-
   const res = await fetch(`${BASE_URL}/chat/completions`, {
     method: "POST",
     headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
     body: JSON.stringify({
       model: MODEL,
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: `Date: ${date}\n\nItems collected in the last ${config.lookbackHours} hours:\n\n${list}` },
+        { role: "system", content: system },
+        { role: "user", content: user },
       ],
     }),
-    signal: AbortSignal.timeout(300000),
+    signal: AbortSignal.timeout(180000),
   });
   if (!res.ok) throw new Error(`LLM API ${res.status}: ${await res.text()}`);
   const text = (await res.json()).choices?.[0]?.message?.content?.trim();
@@ -140,8 +148,92 @@ async function summarize(items, date) {
   return text;
 }
 
-function renderRaw(items) {
-  return items.map((it) => `- **${it.title}** — ${it.source}\n  ${it.link}`).join("\n");
+function parseJson(text) {
+  const m = text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error(`Model did not return JSON: ${text.slice(0, 200)}`);
+  return JSON.parse(m[0]);
+}
+
+async function mapLimit(list, limit, fn) {
+  let next = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(limit, list.length) }, async () => {
+      while (next < list.length) await fn(list[next++]);
+    }),
+  );
+}
+
+// Best-effort readable text of an article page; returns "" when the page is blocked or too short.
+async function fetchArticle(url) {
+  try {
+    const raw = await fetchText(url);
+    // Page summaries in meta tags (arXiv puts the abstract in citation_abstract).
+    const meta = ["citation_abstract", "og:description", "description"]
+      .map((n) => raw.match(new RegExp(`<meta[^>]+(?:name|property)=["']${n}["'][^>]*content=["']([^"']+)`, "i"))?.[1])
+      .find(Boolean);
+    const html = raw.replace(/<(script|style|noscript|svg|nav|header|footer|aside|form)\b[\s\S]*?<\/\1>/gi, " ");
+    const main = html.match(/<article\b[\s\S]*?<\/article>/i)?.[0] || html.match(/<main\b[\s\S]*?<\/main>/i)?.[0] || html;
+    const paras = (main.match(/<(p|blockquote)\b[\s\S]*?<\/\1>/gi) || []).map(decode).filter((p) => p.length > 40);
+    const parts = [...new Set([meta && decode(meta), ...paras].filter(Boolean))];
+    const text = (parts.length ? parts.join("\n") : decode(main)).slice(0, ARTICLE_CHARS);
+    return text.length >= 300 ? text : "";
+  } catch {
+    return "";
+  }
+}
+
+const toSource = (it) => ({ name: it.source, title: it.title, url: it.link });
+
+async function buildBrief(items) {
+  const list = items.map((it, i) => `${i + 1}. [${it.source}] ${it.title}\n   ${it.summary}`).join("\n");
+  const plan = parseJson(await chat(PLAN_PROMPT, list));
+  const sections = (plan.sections || [])
+    .map((s) => ({
+      title: String(s.title || "").trim(),
+      stories: (s.stories || [])
+        .map((st) => ({
+          title: String(st.title || "").trim(),
+          items: [...new Set(st.items || [])].map((n) => items[n - 1]).filter(Boolean),
+        }))
+        .filter((st) => st.title && st.items.length),
+    }))
+    .filter((s) => s.title && s.stories.length);
+  if (!sections.length) throw new Error("Model returned an empty plan");
+
+  await mapLimit(sections.flatMap((s) => s.stories), 4, async (st) => {
+    const texts = await Promise.all(st.items.map((it) => fetchArticle(it.link)));
+    const material = st.items
+      .map((it, i) => `Source ${i + 1}: [${it.source}] ${it.title}\n${texts[i] || it.summary}`)
+      .join("\n\n");
+    try {
+      const d = parseJson(await chat(DETAIL_PROMPT, `Headline: ${st.title}\n\n${material}`));
+      st.summary = String(d.summary || "");
+      st.points = Array.isArray(d.points) ? d.points.map(String).slice(0, 5) : [];
+      st.why = String(d.why || "");
+    } catch (e) {
+      console.warn(`[warn] detail failed for "${st.title}": ${e.message}`);
+      Object.assign(st, { summary: st.items[0].summary.slice(0, 120), points: [], why: "" });
+    }
+    st.grounded = texts.some(Boolean);
+    st.sources = st.items.map(toSource);
+    delete st.items;
+  });
+  return sections;
+}
+
+function rawBrief(items) {
+  const stories = items.map((it) => ({ title: it.title, summary: it.summary, points: [], why: "", grounded: false, sources: [toSource(it)] }));
+  return [{ title: "Raw", stories }];
+}
+
+// Markdown for the Issue and for the no-JavaScript fallback of the site.
+function toMarkdown(sections) {
+  const esc = (s) => s.replace(/\|/g, "/");
+  return sections
+    .map((s) => `## ${esc(s.title)}\n\n` + s.stories
+      .map((st) => `- **${esc(st.title)}**: ${esc(st.summary)} ${st.sources.map((x) => `[source](${x.url})`).join(" · ")}`)
+      .join("\n"))
+    .join("\n\n");
 }
 
 // ---------- publishing ----------
@@ -173,15 +265,18 @@ async function upsertIssue(title, body) {
   return `${existing ? "updated" : "created"} ${issue.html_url}`;
 }
 
-// Writes Markdown into docs/ for GitHub Pages (Jekyll renders it).
-async function writeSite(date, title, body) {
+// Writes the page Markdown and its JSON data into docs/ for GitHub Pages.
+// docs/_layouts/default.html renders the cards from data/<date>.json and lists the archive.
+async function writeSite(date, title, body, brief) {
   const docs = new URL("../docs/", import.meta.url);
   const briefs = new URL("briefs/", docs);
+  const data = new URL("data/", docs);
   await mkdir(briefs, { recursive: true });
-  // The archive list is rendered by docs/_layouts/default.html.
+  await mkdir(data, { recursive: true });
   const page = `---\ntitle: ${title}\nbrief_date: "${date}"\n---\n\n${body}\n`;
   await writeFile(new URL(`${date}.md`, briefs), page);
   await writeFile(new URL("index.md", docs), page);
+  await writeFile(new URL(`${date}.json`, data), JSON.stringify(brief));
 }
 
 // ---------- main ----------
@@ -195,14 +290,18 @@ if (items.length === 0) {
   process.exit(0);
 }
 
-const content = NO_AI ? renderRaw(items) : await summarize(items, date);
-const body = `${content}\n\n---\n<sub>Generated by ai-daily-brief · ${items.length} items · ${NO_AI ? "raw" : MODEL}</sub>`;
+const sections = NO_AI ? rawBrief(items) : await buildBrief(items);
+const stories = sections.flatMap((s) => s.stories);
+console.log(`Stories: ${stories.length}, grounded on the original article: ${stories.filter((s) => s.grounded).length}`);
+
+const footer = `Generated by ai-daily-brief · ${stories.length} stories from ${items.length} items · ${NO_AI ? "raw" : MODEL}`;
+const body = `${toMarkdown(sections)}\n\n---\n<sub>${footer}</sub>`;
 const title = `AI Daily Brief ${date}`;
 
 if (DRY_RUN) {
-  console.log(`\n# ${title}\n\n${body}`);
+  console.log(`\n# ${title}\n\n${body}\n\n${JSON.stringify(sections, null, 2)}`);
 } else {
-  await writeSite(date, title, body);
+  await writeSite(date, title, body, { date, footer, sections });
   console.log(`Site updated: docs/briefs/${date}.md`);
   console.log(`Issue ${await upsertIssue(title, body)}`);
 }
