@@ -1,6 +1,6 @@
 # AI Daily Brief
 
-每天北京时间 08:00，用 GitHub Actions 自动抓取 AI 资讯，交给大模型（OpenAI 兼容接口）整理成中文早报，并在本仓库开一个 Issue。零依赖，只需要 Node 20+。
+每天北京时间 08:00、12:00、18:00，用 GitHub Actions 自动抓取 AI 资讯，交给大模型（OpenAI 兼容接口）整理成中文早报，并在本仓库开一个 Issue。零依赖，只需要 Node 20+。
 
 ## 流程
 
@@ -30,7 +30,7 @@ npm run dry       # 调用模型生成早报，只打印不创建 Issue（需先
 - 生成流程：模型先挑选并分组 → 抓取入选新闻的原文 → 逐条基于原文生成中文摘要、要点和"为什么重要"；数据写入 `docs/data/<日期>.json`，页面据此渲染卡片和详情弹窗
 - `OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL`：任何 OpenAI 兼容的 `/chat/completions` 接口都可以用
 - `BRIEF_TZ`：日期所用的时区，默认 `Asia/Shanghai`
-- 推送时间：修改 `.github/workflows/daily-brief.yml` 里的 cron（使用 UTC 时间）
+- 推送时间：修改 `.github/workflows/daily-brief.yml` 里的 cron（使用 UTC 时间）。同一天多次运行会整体重新生成当天内容，并更新同一个 Issue
 
 ## 注意
 
