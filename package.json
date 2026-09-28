@@ -1,0 +1,14 @@
+{
+  "name": "ai-daily-brief",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "brief": "node src/brief.js",
+    "dry": "node src/brief.js --dry-run",
+    "dry:raw": "node src/brief.js --dry-run --no-ai"
+  }
+}

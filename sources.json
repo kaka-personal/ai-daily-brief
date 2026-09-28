@@ -1,0 +1,17 @@
+{
+  "lookbackHours": 24,
+  "maxItems": 80,
+  "feeds": [
+    { "name": "OpenAI", "url": "https://openai.com/news/rss.xml" },
+    { "name": "Google DeepMind", "url": "https://deepmind.google/blog/rss.xml" },
+    { "name": "Hugging Face", "url": "https://huggingface.co/blog/feed.xml" },
+    { "name": "Simon Willison", "url": "https://simonwillison.net/atom/everything/" },
+    { "name": "TechCrunch AI", "url": "https://techcrunch.com/category/artificial-intelligence/feed/" },
+    { "name": "The Verge AI", "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml" },
+    { "name": "QbitAI", "url": "https://www.qbitai.com/feed" }
+  ],
+  "hackerNews": {
+    "minPoints": 80,
+    "keywords": ["ai", "llm", "gpt", "claude", "anthropic", "openai", "gemini", "llama", "deepseek", "qwen", "mistral", "agent", "model", "transformer", "diffusion", "rag", "inference"]
+  }
+}
