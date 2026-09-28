@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const args = new Set(process.argv.slice(2));
 const DRY_RUN = args.has("--dry-run");
@@ -168,18 +168,10 @@ async function writeSite(date, title, body) {
   const docs = new URL("../docs/", import.meta.url);
   const briefs = new URL("briefs/", docs);
   await mkdir(briefs, { recursive: true });
-  await writeFile(new URL(`${date}.md`, briefs), `---\ntitle: ${title}\n---\n\n${body}\n`);
-
-  const dates = (await readdir(briefs))
-    .filter((f) => f.endsWith(".md"))
-    .map((f) => f.slice(0, -3))
-    .sort()
-    .reverse();
-  const archive = dates.map((d) => `- [${d}](briefs/${d}.html)`).join("\n");
-  await writeFile(
-    new URL("index.md", docs),
-    `---\ntitle: AI Daily Brief\n---\n\n## Latest · ${date}\n\n${body}\n\n## Archive\n\n${archive}\n`,
-  );
+  // The archive list is rendered by docs/_layouts/default.html.
+  const page = `---\ntitle: ${title}\nbrief_date: "${date}"\n---\n\n${body}\n`;
+  await writeFile(new URL(`${date}.md`, briefs), page);
+  await writeFile(new URL("index.md", docs), page);
 }
 
 // ---------- main ----------

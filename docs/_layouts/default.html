@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% assign brief_date = page.brief_date | default: page.name | remove: ".md" %}
+  <title>{{ site.title }} · {{ brief_date }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+  <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <a class="brand" href="{{ '/' | relative_url }}"><span class="dot"></span>{{ site.title }}</a>
+      <h1>{{ brief_date }}</h1>
+      <p class="tagline">{{ site.description }}</p>
+    </div>
+  </header>
+
+  <main class="wrap content">
+    {{ content }}
+  </main>
+
+  {% assign briefs = site.pages | where_exp: "p", "p.path contains 'briefs/'" | sort: "path" | reverse %}
+  <section class="wrap archive">
+    <h2>Archive</h2>
+    <ul>
+      {% for p in briefs %}
+      {% assign d = p.brief_date | default: p.name | remove: ".md" %}
+      <li><a href="{{ p.url | relative_url }}"{% if d == brief_date %} class="current"{% endif %}>{{ d }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <footer class="wrap footer">
+    <a href="https://github.com/{{ site.github.repository_nwo | default: 'kaka-personal/ai-daily-brief' }}">GitHub</a>
+    <span>·</span>
+    <span>Updated daily at 08:00 (UTC+8)</span>
+  </footer>
+</body>
+</html>
