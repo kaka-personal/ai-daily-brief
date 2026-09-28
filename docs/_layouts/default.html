@@ -51,7 +51,7 @@
         <h4>Why it matters</h4>
         <p id="m-why"></p>
       </section>
-      <p class="modal-note" id="m-note" hidden>Written from the feed summary only: the original page could not be fetched.</p>
+      <p class="modal-note" id="m-note" hidden></p>
       <h4>Sources</h4>
       <ul class="modal-sources" id="m-sources"></ul>
     </article>
@@ -63,6 +63,10 @@
     (function () {
       var board = document.getElementById("board");
       var modal = document.getElementById("modal");
+      var NOTES = {
+        feed: "Written from the feed summary only: the original page could not be fetched.",
+        none: "The original page could not be fetched, so no details were generated. Open a source below to read it.",
+      };
 
       function el(tag, cls, text) {
         var e = document.createElement(tag);
@@ -80,7 +84,9 @@
       function openStory(story, section) {
         document.getElementById("m-tag").textContent = section;
         document.getElementById("m-title").textContent = story.title;
-        document.getElementById("m-sum").textContent = story.summary;
+        var sum = document.getElementById("m-sum");
+        sum.textContent = story.summary;
+        sum.hidden = !story.summary;
 
         var points = document.getElementById("m-points");
         points.innerHTML = "";
@@ -88,7 +94,9 @@
         document.getElementById("m-points-wrap").hidden = !story.points.length;
         document.getElementById("m-why").textContent = story.why;
         document.getElementById("m-why-wrap").hidden = !story.why;
-        document.getElementById("m-note").hidden = story.grounded;
+        var note = document.getElementById("m-note");
+        note.textContent = NOTES[story.basis] || "";
+        note.hidden = !note.textContent;
 
         var sources = document.getElementById("m-sources");
         sources.innerHTML = "";
