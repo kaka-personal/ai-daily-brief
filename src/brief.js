@@ -146,21 +146,31 @@ function renderRaw(items) {
 
 // ---------- publishing ----------
 
-async function createIssue(title, body) {
+// Updates today's open issue if one exists (manual reruns), otherwise creates it.
+async function upsertIssue(title, body) {
   const repo = process.env.GITHUB_REPOSITORY;
   const token = process.env.GITHUB_TOKEN;
   if (!repo || !token) throw new Error("GITHUB_REPOSITORY and GITHUB_TOKEN are required to create an issue");
-  const res = await fetch(`https://api.github.com/repos/${repo}/issues`, {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${token}`,
-      accept: "application/vnd.github+json",
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({ title, body }),
-  });
-  if (!res.ok) throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
-  return (await res.json()).html_url;
+  const api = async (path, method = "GET", data) => {
+    const res = await fetch(`https://api.github.com/repos/${repo}${path}`, {
+      method,
+      headers: {
+        authorization: `Bearer ${token}`,
+        accept: "application/vnd.github+json",
+        "content-type": "application/json",
+      },
+      body: data && JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
+    return res.json();
+  };
+
+  const open = await api("/issues?state=open&per_page=50");
+  const existing = open.find((i) => i.title === title && !i.pull_request);
+  const issue = existing
+    ? await api(`/issues/${existing.number}`, "PATCH", { body })
+    : await api("/issues", "POST", { title, body });
+  return `${existing ? "updated" : "created"} ${issue.html_url}`;
 }
 
 // Writes Markdown into docs/ for GitHub Pages (Jekyll renders it).
@@ -194,5 +204,5 @@ if (DRY_RUN) {
 } else {
   await writeSite(date, title, body);
   console.log(`Site updated: docs/briefs/${date}.md`);
-  console.log(`Issue created: ${await createIssue(title, body)}`);
+  console.log(`Issue ${await upsertIssue(title, body)}`);
 }

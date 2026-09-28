@@ -75,15 +75,21 @@
         h.after(count);
       });
 
-      // Titles are rendered on their own line: drop the leading colon and the dots between source links.
+      // Titles are rendered on their own line: drop the leading colon, and move source links into one row at the bottom.
       Array.prototype.forEach.call(content.querySelectorAll("li"), function (li) {
         var s = li.querySelector(":scope > strong:first-child");
         if (s && s.nextSibling && s.nextSibling.nodeType === 3) {
           s.nextSibling.textContent = s.nextSibling.textContent.replace(/^\s*[:：]\s*/, "");
         }
+        var links = li.querySelectorAll(":scope > a");
+        if (!links.length) return;
+        var row = document.createElement("div");
+        row.className = "sources";
+        Array.prototype.forEach.call(links, function (a) { row.appendChild(a); });
         Array.prototype.slice.call(li.childNodes).forEach(function (n) {
-          if (n.nodeType === 3 && /^\s*·\s*$/.test(n.textContent)) n.remove();
+          if (n.nodeType === 3 && /^[\s·,，、]*$/.test(n.textContent)) n.remove();
         });
+        li.appendChild(row);
       });
     })();
   </script>
