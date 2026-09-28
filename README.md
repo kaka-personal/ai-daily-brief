@@ -13,8 +13,9 @@
 1. 仓库 Settings → Secrets and variables → Actions：
    - **Secrets** 页新建 `OPENAI_API_KEY`
    - **Variables** 页新建 `OPENAI_BASE_URL`（例如 `https://xxx/v1`）和 `OPENAI_MODEL`
-2. 进入 Actions 页面，启用 workflow，点击 **Run workflow** 手动跑一次验证。
-3. 仓库页面点击 **Watch → Custom → Issues**，之后会收到邮件或 App 推送。
+2. 仓库 Settings → Pages → Build and deployment → Source 选 **GitHub Actions**（免费账号需要仓库为 Public）。
+3. 进入 Actions 页面，启用 workflow，点击 **Run workflow** 手动跑一次验证。每天的早报会存档到 `docs/briefs/`，网站地址为 `https://<用户名>.github.io/ai-daily-brief/`。
+4. 仓库页面点击 **Watch → Custom → Issues**，之后会收到邮件或 App 推送。
 
 ## 本地调试
 

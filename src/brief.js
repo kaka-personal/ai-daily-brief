@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 
 const args = new Set(process.argv.slice(2));
 const DRY_RUN = args.has("--dry-run");
@@ -163,6 +163,25 @@ async function createIssue(title, body) {
   return (await res.json()).html_url;
 }
 
+// Writes Markdown into docs/ for GitHub Pages (Jekyll renders it).
+async function writeSite(date, title, body) {
+  const docs = new URL("../docs/", import.meta.url);
+  const briefs = new URL("briefs/", docs);
+  await mkdir(briefs, { recursive: true });
+  await writeFile(new URL(`${date}.md`, briefs), `---\ntitle: ${title}\n---\n\n${body}\n`);
+
+  const dates = (await readdir(briefs))
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => f.slice(0, -3))
+    .sort()
+    .reverse();
+  const archive = dates.map((d) => `- [${d}](briefs/${d}.html)`).join("\n");
+  await writeFile(
+    new URL("index.md", docs),
+    `---\ntitle: AI Daily Brief\n---\n\n## Latest · ${date}\n\n${body}\n\n## Archive\n\n${archive}\n`,
+  );
+}
+
 // ---------- main ----------
 
 const date = new Date().toLocaleDateString("sv-SE", { timeZone: TIME_ZONE });
@@ -181,5 +200,7 @@ const title = `AI Daily Brief ${date}`;
 if (DRY_RUN) {
   console.log(`\n# ${title}\n\n${body}`);
 } else {
+  await writeSite(date, title, body);
+  console.log(`Site updated: docs/briefs/${date}.md`);
   console.log(`Issue created: ${await createIssue(title, body)}`);
 }
