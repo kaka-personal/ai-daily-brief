@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="light">
   {% assign brief_date = page.brief_date | default: page.name | remove: ".md" %}
   <title>{{ site.title }} · {{ brief_date }}</title>
   <meta name="description" content="{{ site.description }}">
@@ -11,55 +11,48 @@
   <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
 </head>
 <body>
-  <div class="bg" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-
-  <div class="shell">
-    <nav class="topbar">
-      <a class="brand" href="{{ '/' | relative_url }}"><span class="pulse"></span>{{ site.title }}</a>
-      <a class="gh" href="https://github.com/{{ site.github.repository_nwo | default: 'kaka-personal/ai-daily-brief' }}">GitHub ↗</a>
-    </nav>
-
-    <header class="hero">
-      <p class="eyebrow">Daily Intelligence Report</p>
-      <h1>{{ brief_date }}</h1>
-      <p class="weekday">{{ brief_date | date: "%A" }} · {{ site.description }}</p>
-    </header>
-
-    <div class="layout">
-      <main class="content" id="content">
-        {{ content }}
-      </main>
-
-      <aside class="side">
-        <div class="panel toc-panel" hidden>
-          <h3>Sections</h3>
-          <ol class="toc" id="toc"></ol>
-        </div>
-        {% assign briefs = site.pages | where_exp: "p", "p.path contains 'briefs/'" | sort: "path" | reverse %}
-        <div class="panel">
-          <h3>Archive</h3>
-          <ul class="archive">
-            {% for p in briefs %}
-            {% assign d = p.brief_date | default: p.name | remove: ".md" %}
-            <li><a href="{{ p.url | relative_url }}"{% if d == brief_date %} class="current"{% endif %}>{{ d }}</a></li>
-            {% endfor %}
-          </ul>
-        </div>
-      </aside>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <div class="nav-links" id="toc"></div>
+      <a class="nav-gh" href="https://github.com/{{ site.github.repository_nwo | default: 'kaka-personal/ai-daily-brief' }}">GitHub</a>
     </div>
+  </nav>
 
-    <footer class="footer">
-      <span>Updated daily at 08:00 (UTC+8)</span>
-      <span>Built with GitHub Actions + Pages</span>
-    </footer>
-  </div>
+  <header class="hero">
+    <p class="eyebrow">Daily AI Brief</p>
+    <h1>{{ brief_date }}</h1>
+    <p class="sub">{{ brief_date | date: "%A" }} · {{ site.description }}</p>
+  </header>
+
+  <main class="content" id="content">
+    {{ content }}
+  </main>
+
+  {% assign briefs = site.pages | where_exp: "p", "p.path contains 'briefs/'" | sort: "path" | reverse %}
+  <section class="archive">
+    <h2>Archive</h2>
+    <ul>
+      {% for p in briefs %}
+      {% assign d = p.brief_date | default: p.name | remove: ".md" %}
+      <li><a href="{{ p.url | relative_url }}"{% if d == brief_date %} class="current"{% endif %}>{{ d }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>Updated daily at 08:00 (UTC+8).</span>
+      <span>Built with GitHub Actions and GitHub Pages.</span>
+    </div>
+  </footer>
 
   <script>
-    // Wrap each h2 and its following nodes into a section card, then build the sidebar TOC.
+    // Wrap each h2 and its following nodes into a section, and add nav links.
     (function () {
       var content = document.getElementById("content");
-      var headings = Array.prototype.slice.call(content.querySelectorAll(":scope > h2"));
       var toc = document.getElementById("toc");
+      var headings = Array.prototype.slice.call(content.querySelectorAll(":scope > h2"));
       headings.forEach(function (h, i) {
         var nodes = [h];
         var n = h.nextElementSibling;
@@ -71,22 +64,18 @@
         h.before(section);
         nodes.forEach(function (x) { section.appendChild(x); });
 
-        var count = section.querySelectorAll("li").length;
-        var badge = document.createElement("span");
-        badge.className = "count";
-        badge.textContent = count;
-        h.insertAdjacentHTML("afterbegin", '<span class="idx">' + String(i + 1).padStart(2, "0") + "</span>");
-        h.appendChild(badge);
+        var a = document.createElement("a");
+        a.href = "#" + section.id;
+        a.textContent = h.textContent.trim();
+        toc.appendChild(a);
 
-        var li = document.createElement("li");
-        li.innerHTML = '<a href="#' + section.id + '"></a>';
-        li.firstChild.textContent = h.childNodes[1] ? h.childNodes[1].textContent.trim() : section.id;
-        li.firstChild.setAttribute("data-count", count);
-        toc.appendChild(li);
+        var count = document.createElement("span");
+        count.className = "count";
+        count.textContent = section.querySelectorAll("li").length + " items";
+        h.after(count);
       });
-      if (headings.length) toc.parentElement.hidden = false;
 
-      // Titles are rendered on their own line: drop the leading colon and the dots between source pills.
+      // Titles are rendered on their own line: drop the leading colon and the dots between source links.
       Array.prototype.forEach.call(content.querySelectorAll("li"), function (li) {
         var s = li.querySelector(":scope > strong:first-child");
         if (s && s.nextSibling && s.nextSibling.nodeType === 3) {
