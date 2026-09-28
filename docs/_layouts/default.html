@@ -3,40 +3,100 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
   {% assign brief_date = page.brief_date | default: page.name | remove: ".md" %}
   <title>{{ site.title }} · {{ brief_date }}</title>
   <meta name="description" content="{{ site.description }}">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
 </head>
 <body>
-  <header class="hero">
-    <div class="wrap">
-      <a class="brand" href="{{ '/' | relative_url }}"><span class="dot"></span>{{ site.title }}</a>
+  <div class="bg" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
+
+  <div class="shell">
+    <nav class="topbar">
+      <a class="brand" href="{{ '/' | relative_url }}"><span class="pulse"></span>{{ site.title }}</a>
+      <a class="gh" href="https://github.com/{{ site.github.repository_nwo | default: 'kaka-personal/ai-daily-brief' }}">GitHub ↗</a>
+    </nav>
+
+    <header class="hero">
+      <p class="eyebrow">Daily Intelligence Report</p>
       <h1>{{ brief_date }}</h1>
-      <p class="tagline">{{ site.description }}</p>
+      <p class="weekday">{{ brief_date | date: "%A" }} · {{ site.description }}</p>
+    </header>
+
+    <div class="layout">
+      <main class="content" id="content">
+        {{ content }}
+      </main>
+
+      <aside class="side">
+        <div class="panel toc-panel" hidden>
+          <h3>Sections</h3>
+          <ol class="toc" id="toc"></ol>
+        </div>
+        {% assign briefs = site.pages | where_exp: "p", "p.path contains 'briefs/'" | sort: "path" | reverse %}
+        <div class="panel">
+          <h3>Archive</h3>
+          <ul class="archive">
+            {% for p in briefs %}
+            {% assign d = p.brief_date | default: p.name | remove: ".md" %}
+            <li><a href="{{ p.url | relative_url }}"{% if d == brief_date %} class="current"{% endif %}>{{ d }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </aside>
     </div>
-  </header>
 
-  <main class="wrap content">
-    {{ content }}
-  </main>
+    <footer class="footer">
+      <span>Updated daily at 08:00 (UTC+8)</span>
+      <span>Built with GitHub Actions + Pages</span>
+    </footer>
+  </div>
 
-  {% assign briefs = site.pages | where_exp: "p", "p.path contains 'briefs/'" | sort: "path" | reverse %}
-  <section class="wrap archive">
-    <h2>Archive</h2>
-    <ul>
-      {% for p in briefs %}
-      {% assign d = p.brief_date | default: p.name | remove: ".md" %}
-      <li><a href="{{ p.url | relative_url }}"{% if d == brief_date %} class="current"{% endif %}>{{ d }}</a></li>
-      {% endfor %}
-    </ul>
-  </section>
+  <script>
+    // Wrap each h2 and its following nodes into a section card, then build the sidebar TOC.
+    (function () {
+      var content = document.getElementById("content");
+      var headings = Array.prototype.slice.call(content.querySelectorAll(":scope > h2"));
+      var toc = document.getElementById("toc");
+      headings.forEach(function (h, i) {
+        var nodes = [h];
+        var n = h.nextElementSibling;
+        while (n && n.tagName !== "H2" && n.tagName !== "HR") { nodes.push(n); n = n.nextElementSibling; }
+        var section = document.createElement("section");
+        section.className = i === 0 ? "block highlights" : "block";
+        section.id = h.id || "s" + i;
+        h.removeAttribute("id");
+        h.before(section);
+        nodes.forEach(function (x) { section.appendChild(x); });
 
-  <footer class="wrap footer">
-    <a href="https://github.com/{{ site.github.repository_nwo | default: 'kaka-personal/ai-daily-brief' }}">GitHub</a>
-    <span>·</span>
-    <span>Updated daily at 08:00 (UTC+8)</span>
-  </footer>
+        var count = section.querySelectorAll("li").length;
+        var badge = document.createElement("span");
+        badge.className = "count";
+        badge.textContent = count;
+        h.insertAdjacentHTML("afterbegin", '<span class="idx">' + String(i + 1).padStart(2, "0") + "</span>");
+        h.appendChild(badge);
+
+        var li = document.createElement("li");
+        li.innerHTML = '<a href="#' + section.id + '"></a>';
+        li.firstChild.textContent = h.childNodes[1] ? h.childNodes[1].textContent.trim() : section.id;
+        li.firstChild.setAttribute("data-count", count);
+        toc.appendChild(li);
+      });
+      if (headings.length) toc.parentElement.hidden = false;
+
+      // Titles are rendered on their own line: drop the leading colon and the dots between source pills.
+      Array.prototype.forEach.call(content.querySelectorAll("li"), function (li) {
+        var s = li.querySelector(":scope > strong:first-child");
+        if (s && s.nextSibling && s.nextSibling.nodeType === 3) {
+          s.nextSibling.textContent = s.nextSibling.textContent.replace(/^\s*[:：]\s*/, "");
+        }
+        Array.prototype.slice.call(li.childNodes).forEach(function (n) {
+          if (n.nodeType === 3 && /^\s*·\s*$/.test(n.textContent)) n.remove();
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
