@@ -107,7 +107,7 @@ Write the entire brief in Simplified Chinese, formatted as GitHub Markdown.
 Structure:
 1. "## 今日要点" - the 3 to 5 most important stories, one or two sentences each, explaining why they matter.
 2. Then group the remaining noteworthy items under a few "##" topic headings (for example models and products, research, open source and tools, industry). Pick headings that fit the day's news; skip empty ones.
-3. Each item is one bullet: a bold short Chinese title, a one-sentence summary, then the original link as [source](url).
+3. Every item in every section, including "## 今日要点", is one bullet: a bold short Chinese title, a one-sentence summary, then the original link as [source](url). An item without a link is not allowed.
 
 Rules:
 - Only use the items provided. Do not invent facts, numbers or links.
