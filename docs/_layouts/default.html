@@ -151,7 +151,8 @@
             rows.appendChild(row);
           });
           var panel = el("div", "panel");
-          panel.appendChild(rows);
+          panel.appendChild(sec.stories.length ? rows : el("p", "empty", "No stories in this section today."));
+          if (!sec.stories.length) card.classList.add("is-empty");
           card.appendChild(panel);
           board.appendChild(card);
         });

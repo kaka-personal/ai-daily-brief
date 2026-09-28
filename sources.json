@@ -1,7 +1,7 @@
 {
   "lookbackHours": 24,
   "maxItems": 80,
-  "highlightsTitle": "今日要点",
+  "sections": ["今日要点", "模型发布", "产品应用", "研究论文", "开源工具", "行业资本", "政策安全"],
   "feeds": [
     { "name": "OpenAI", "url": "https://openai.com/news/rss.xml" },
     { "name": "Google DeepMind", "url": "https://deepmind.google/blog/rss.xml" },

@@ -102,14 +102,17 @@ async function collect() {
 
 // ---------- summarizing ----------
 
-// Stage 1: pick and group stories. The model only returns item numbers, so every story keeps its real links.
+// Stage 1: pick stories and assign each to a fixed section (from sources.json).
+// The model only returns section and item numbers, so every story keeps its real links and lands in a known section.
 const PLAN_PROMPT = `You are the editor of a daily AI news brief for software engineers. You receive numbered news items.
-Select the noteworthy AI stories and group them. Reply with JSON only, no Markdown fences:
-{"sections":[{"title":"...","stories":[{"title":"...","items":[1,4]}]}]}
+Select the noteworthy AI stories and assign each one to a section. Reply with JSON only, no Markdown fences:
+{"stories":[{"section":0,"title":"...","items":[1,4]}]}
+
+Sections (use the number in "section"):
+${config.sections.map((s, i) => `${i}. ${s}`).join("\n")}
 
 Rules:
-- The first section must be titled "${config.highlightsTitle}" and hold the 3 to 5 most important stories.
-- Then 2 to 5 topic sections with short Simplified Chinese titles that fit the day's news (for example models and products, research, open source and tools, industry). Skip empty ones.
+- Section 0 holds the 3 to 5 most important stories of the day. Put every other story into the one section that fits it best; a section may stay empty.
 - Each story appears once in the whole brief. "items" lists the numbers of the input items that cover it; merge items about the same story.
 - "title" is a short Simplified Chinese headline. Keep product and model names in their original language.
 - Drop marketing fluff, duplicates and items unrelated to AI.`;
@@ -188,18 +191,18 @@ const toSource = (it) => ({ name: it.source, title: it.title, url: it.link });
 async function buildBrief(items) {
   const list = items.map((it, i) => `${i + 1}. [${it.source}] ${it.title}\n   ${it.summary}`).join("\n");
   const plan = parseJson(await chat(PLAN_PROMPT, list));
-  const sections = (plan.sections || [])
-    .map((s) => ({
-      title: String(s.title || "").trim(),
-      stories: (s.stories || [])
-        .map((st) => ({
-          title: String(st.title || "").trim(),
-          items: [...new Set(st.items || [])].map((n) => items[n - 1]).filter(Boolean),
-        }))
-        .filter((st) => st.title && st.items.length),
-    }))
-    .filter((s) => s.title && s.stories.length);
-  if (!sections.length) throw new Error("Model returned an empty plan");
+  // Every configured section is kept, in config order, even when empty.
+  const sections = config.sections.map((title) => ({ title, stories: [] }));
+  for (const st of plan.stories || []) {
+    const section = sections[st.section];
+    const story = {
+      title: String(st.title || "").trim(),
+      items: [...new Set(st.items || [])].map((n) => items[n - 1]).filter(Boolean),
+    };
+    if (!section) console.warn(`[warn] unknown section ${st.section} for "${story.title}"`);
+    else if (story.title && story.items.length) section.stories.push(story);
+  }
+  if (!sections.some((s) => s.stories.length)) throw new Error("Model returned an empty plan");
 
   await mapLimit(sections.flatMap((s) => s.stories), 4, async (st) => {
     const texts = await Promise.all(st.items.map((it) => fetchArticle(it.link)));
@@ -236,6 +239,7 @@ function rawBrief(items) {
 function toMarkdown(sections) {
   const esc = (s) => s.replace(/\|/g, "/");
   return sections
+    .filter((s) => s.stories.length)
     .map((s) => `## ${esc(s.title)}\n\n` + s.stories
       .map((st) => `- **${esc(st.title)}**${st.summary ? `: ${esc(st.summary)}` : ""} ${st.sources.map((x) => `[source](${x.url})`).join(" · ")}`)
       .join("\n"))
