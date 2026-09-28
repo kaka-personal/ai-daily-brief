@@ -111,7 +111,7 @@ Structure:
 
 Rules:
 - Only use the items provided. Do not invent facts, numbers or links.
-- Merge items that cover the same story into one bullet with multiple links.
+- Merge items that cover the same story into one bullet with multiple links, separated by " · ". Never use the "|" character anywhere, because it renders as a table.
 - Drop marketing fluff, duplicates and items unrelated to AI.
 - Keep product and model names in their original language.`;
 
