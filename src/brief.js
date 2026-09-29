@@ -112,8 +112,10 @@ Sections (use the number in "section"):
 ${config.sections.map((s, i) => `${i}. ${s}`).join("\n")}
 
 Rules:
-- Section 0 holds the 3 to 5 most important stories of the day. Put every other story into the one section that fits it best; a section may stay empty.
-- Each story appears once in the whole brief. "items" lists the numbers of the input items that cover it; merge items about the same story.
+- Section 0 holds the 3 to 5 most important stories of the day. Put every other story into the one section that fits it best.
+- A section can hold any number of stories. Leaving a section empty is fine; never merge stories to fill a section.
+- A story is exactly one event. "items" lists the numbers of the input items that report that same event; only merge items when they cover the same event. Unrelated items are always separate stories.
+- Each story appears once in the whole brief.
 - "title" is a short Simplified Chinese headline. Keep product and model names in their original language.
 - Drop marketing fluff, duplicates and items unrelated to AI.`;
 

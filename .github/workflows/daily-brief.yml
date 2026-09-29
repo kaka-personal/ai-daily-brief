@@ -2,7 +2,7 @@ name: AI Daily Brief
 
 on:
   schedule:
-    - cron: "0 0,4,10 * * *" # 08:00, 12:00, 18:00 Beijing (UTC+8)
+    - cron: "17 0,4,10 * * *" # 08:17, 12:17, 18:17 Beijing (UTC+8); off the hour to avoid dropped runs
   workflow_dispatch:
 
 permissions:
