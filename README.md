@@ -30,7 +30,7 @@ npm run dry       # 调用模型生成早报，只打印不创建 Issue（需先
 - 生成流程：模型先挑选并分组 → 抓取入选新闻的原文 → 逐条基于原文生成中文摘要、要点和"为什么重要"；数据写入 `docs/data/<日期>.json`，页面据此渲染卡片和详情弹窗
 - `OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL`：任何 OpenAI 兼容的 `/chat/completions` 接口都可以用
 - `BRIEF_TZ`：日期所用的时区，默认 `Asia/Shanghai`
-- 检查频率：修改 `.github/workflows/daily-brief.yml` 里的 cron。没有新条目的运行不调用模型、不部署；当天已处理的链接记录在 `docs/data/<日期>.json` 的 `seen` 字段
+- 检查频率：workflow 每次运行结束后等待约 13 分钟再触发下一次（`next` job，自我接力），约每 15 分钟一轮；cron 只作备用（GitHub 定时任务对本仓库一直未触发）。要停止，在 Actions 页面取消正在运行的那次，或禁用该 workflow；链条断了手动 Run workflow 一次即可恢复。没有新条目的运行不调用模型、不部署；当天已处理的链接记录在 `docs/data/<日期>.json` 的 `seen` 字段
 
 ## 注意
 

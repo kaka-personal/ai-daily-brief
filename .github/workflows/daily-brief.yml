@@ -1,8 +1,11 @@
 name: AI Daily Brief
 
 on:
+  # The main trigger is the self-dispatch chain in the "next" job below: every run starts the
+  # following one about 15 minutes later. The schedule is only a backup that can restart the chain,
+  # because GitHub has not been firing it for this repository.
+  # To stop the chain, cancel the running run or disable the workflow in the Actions tab.
   schedule:
-    # Every 15 minutes, off the hour. Runs without new items exit early (no model calls, no deploy).
     - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 
@@ -11,7 +14,10 @@ permissions:
   issues: write
   pages: write
   id-token: write
+  actions: write
 
+# One run at a time and at most one pending: a newer pending run replaces an older one,
+# so manual or scheduled runs merge into the chain instead of forking a second one.
 concurrency:
   group: daily-brief
   cancel-in-progress: false
@@ -60,3 +66,23 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
       - id: deploy
         uses: actions/deploy-pages@v4
+
+  next:
+    needs: [brief, deploy]
+    # Keep the chain alive when the brief or the deploy failed or was skipped;
+    # cancelling a run stops the chain.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Wait before the next check
+        run: sleep 780
+      - name: Start the next run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for i in 1 2 3; do
+            gh workflow run daily-brief.yml --repo "$GITHUB_REPOSITORY" --ref main && exit 0
+            sleep 30
+          done
+          exit 1
