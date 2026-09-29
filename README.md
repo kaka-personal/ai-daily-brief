@@ -1,11 +1,11 @@
 # AI Daily Brief
 
-用 GitHub Actions 每小时检查一次 AI 资讯，有新新闻时，交给大模型（OpenAI 兼容接口）整理成中文早报，并在本仓库开一个 Issue。零依赖，只需要 Node 20+。
+用 GitHub Actions 每天北京时间 08:00、12:00、18:00 检查 AI 资讯，有新新闻时，交给大模型（OpenAI 兼容接口）整理成中文早报，并在本仓库开一个 Issue。零依赖，只需要 Node 20+。
 
 ## 流程
 
 ```
-每小时 → 抓 RSS + Hacker News → 与今天已处理的链接对比 → 没有新条目就结束；有则只对新条目挑选分组、生成详情并追加到当天页面 → 部署 Pages、更新 Issue
+08:00 / 12:00 / 18:00 → 抓 RSS + Hacker News → 与今天已处理的链接对比 → 没有新条目就结束；有则只对新条目挑选分组、生成详情并追加到当天页面 → 部署 Pages、更新 Issue
 ```
 
 ## 部署
@@ -30,7 +30,7 @@ npm run dry       # 调用模型生成早报，只打印不创建 Issue（需先
 - 生成流程：模型先挑选并分组 → 抓取入选新闻的原文 → 逐条基于原文生成中文摘要、要点和"为什么重要"；数据写入 `docs/data/<日期>.json`，页面据此渲染卡片和详情弹窗
 - `OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL`：任何 OpenAI 兼容的 `/chat/completions` 接口都可以用
 - `BRIEF_TZ`：日期所用的时区，默认 `Asia/Shanghai`
-- 检查频率：workflow 每次运行结束后等待约 58 分钟再触发下一次（`next` job，自我接力），约每小时一轮；cron 只作备用（GitHub 定时任务对本仓库一直未触发）。要停止，在 Actions 页面取消正在运行的那次，或禁用该 workflow；链条断了手动 Run workflow 一次即可恢复。没有新条目的运行不调用模型、不部署；当天已处理的链接记录在 `docs/data/<日期>.json` 的 `seen` 字段
+- 检查频率：workflow 每次运行结束后等到下一个时间点（北京时间 08:00、12:00、18:00）再触发下一次（`next` job，自我接力）；GitHub 单个 job 最长 6 小时，超过 5.5 小时的间隔由只接力、不抓新闻的 wait 运行衔接；时间点在 `next` job 里按 UTC 00/04/10 配置；cron 只作备用（GitHub 定时任务对本仓库一直未触发）。要停止，在 Actions 页面取消正在运行的那次，或禁用该 workflow；链条断了手动 Run workflow 一次即可恢复。没有新条目的运行不调用模型、不部署；当天已处理的链接记录在 `docs/data/<日期>.json` 的 `seen` 字段
 
 ## 注意
 

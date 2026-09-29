@@ -1,13 +1,21 @@
 name: AI Daily Brief
 
 on:
-  # The main trigger is the self-dispatch chain in the "next" job below: every run starts the
-  # following one about an hour later. The schedule is only a backup that can restart the chain,
-  # because GitHub has not been firing it for this repository.
+  # The main trigger is the self-dispatch chain in the "next" job below: every run waits until the
+  # next slot (08:00, 12:00, 18:00 Beijing time) and starts the following run. Jobs are capped at
+  # 6 hours, so a longer gap (18:00 -> 08:00) is bridged by "wait" runs that only continue the chain.
+  # The schedule is only a backup that can restart the chain, because GitHub has not been firing it
+  # for this repository.
   # To stop the chain, cancel the running run or disable the workflow in the Actions tab.
   schedule:
-    - cron: "7 * * * *"
+    - cron: "7 0,4,10 * * *"
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "brief: check for news; wait: only continue the chain"
+        type: choice
+        options: [brief, wait]
+        default: brief
 
 permissions:
   contents: write
@@ -16,16 +24,15 @@ permissions:
   id-token: write
   actions: write
 
-# One run at a time and at most one pending: a newer pending run replaces an older one,
-# so manual or scheduled runs merge into the chain instead of forking a second one.
-concurrency:
-  group: daily-brief
-  cancel-in-progress: false
-
 jobs:
   brief:
+    if: inputs.mode != 'wait'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Briefs run one at a time; the waiting "next" job below does not block manual runs.
+    concurrency:
+      group: daily-brief
+      cancel-in-progress: false
     outputs:
       changed: ${{ steps.brief.outputs.changed }}
     steps:
@@ -51,6 +58,9 @@ jobs:
     needs: brief
     if: needs.brief.outputs.changed == 'true'
     runs-on: ubuntu-latest
+    concurrency:
+      group: daily-brief-deploy
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
@@ -73,16 +83,35 @@ jobs:
     # cancelling a run stops the chain.
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
-    timeout-minutes: 70
+    timeout-minutes: 350
+    # A newer waiting job replaces an older one, so manual runs never fork a second chain.
+    concurrency:
+      group: daily-brief-next
+      cancel-in-progress: true
     steps:
-      - name: Wait before the next check
-        run: sleep 3480
+      - name: Wait for the next slot
+        id: wait
+        run: |
+          now=$(date +%s)
+          # Next slot at least 5 minutes away. Slots in UTC: 00, 04, 10 = 08:00, 12:00, 18:00 Beijing (UTC+8, no DST).
+          for day in 0 1; do
+            for hour in 00 04 10; do
+              t=$(date -u -d "$(date -u -d "+$day day" +%F) $hour:00" +%s)
+              if [ "$t" -gt $((now + 300)) ]; then target=$t; break 2; fi
+            done
+          done
+          wait=$((target - now))
+          max=19800 # 5.5 hours; jobs are capped at 6
+          if [ "$wait" -gt "$max" ]; then mode=wait; wait=$max; else mode=brief; fi
+          echo "Next slot $(date -u -d "@$target" '+%F %H:%M') UTC, sleeping ${wait}s, then mode=$mode"
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+          sleep "$wait"
       - name: Start the next run
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           for i in 1 2 3; do
-            gh workflow run daily-brief.yml --repo "$GITHUB_REPOSITORY" --ref main && exit 0
+            gh workflow run daily-brief.yml --repo "$GITHUB_REPOSITORY" --ref main -f mode=${{ steps.wait.outputs.mode }} && exit 0
             sleep 30
           done
           exit 1
