@@ -35,7 +35,7 @@
     {{ content }}
   </main>
 
-  <footer class="footer" id="footer">Checks for new stories every 15 minutes · GitHub Actions + Pages</footer>
+  <footer class="footer" id="footer">Checks for new stories every hour · GitHub Actions + Pages</footer>
 
   <dialog class="modal" id="modal">
     <article class="modal-box">
@@ -156,7 +156,7 @@
           card.appendChild(panel);
           board.appendChild(card);
         });
-        document.getElementById("footer").textContent = brief.footer + " · Checks for new stories every 15 minutes";
+        document.getElementById("footer").textContent = brief.footer + " · Checks for new stories every hour";
         board.classList.add("ready");
       }
 
