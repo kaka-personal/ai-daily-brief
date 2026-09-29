@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 
 const args = new Set(process.argv.slice(2));
 const DRY_RUN = args.has("--dry-run");
@@ -116,6 +116,7 @@ Rules:
 - A section can hold any number of stories. Leaving a section empty is fine; never merge stories to fill a section.
 - A story is exactly one event. "items" lists the numbers of the input items that report that same event; only merge items when they cover the same event. Unrelated items are always separate stories.
 - Each story appears once in the whole brief.
+- When stories already in today's brief are listed, skip items about those events, and add to section 0 only as many stories as it has room for.
 - "title" is a short Simplified Chinese headline. Keep product and model names in their original language.
 - Drop marketing fluff, duplicates and items unrelated to AI.`;
 
@@ -190,11 +191,16 @@ async function fetchArticle(url) {
 
 const toSource = (it) => ({ name: it.source, title: it.title, url: it.link });
 
-async function buildBrief(items) {
+// Plans stories from fresh items and appends them to today's sections; returns the added stories.
+// Stories already in the brief are listed so the model skips events that are covered.
+async function planStories(items, sections) {
   const list = items.map((it, i) => `${i + 1}. [${it.source}] ${it.title}\n   ${it.summary}`).join("\n");
-  const plan = parseJson(await chat(PLAN_PROMPT, list));
-  // Every configured section is kept, in config order, even when empty.
-  const sections = config.sections.map((title) => ({ title, stories: [] }));
+  const covered = sections.flatMap((s, i) => s.stories.map((st) => `- [${i}] ${st.title}`));
+  const context = covered.length
+    ? `\n\nAlready in today's brief; skip items about these events. Section 0 has room for ${Math.max(0, 5 - sections[0].stories.length)} more stories:\n${covered.join("\n")}`
+    : "";
+  const plan = parseJson(await chat(PLAN_PROMPT, `News items:\n${list}${context}`));
+  const added = [];
   for (const st of plan.stories || []) {
     const section = sections[st.section];
     const story = {
@@ -203,39 +209,44 @@ async function buildBrief(items) {
       items: [...new Set([].concat(st.items ?? []).map(Number))].map((n) => items[n - 1]).filter(Boolean),
     };
     if (!section) console.warn(`[warn] unknown section ${st.section} for "${story.title}"`);
-    else if (story.title && story.items.length) section.stories.push(story);
-  }
-  if (!sections.some((s) => s.stories.length)) throw new Error("Model returned an empty plan");
-
-  await mapLimit(sections.flatMap((s) => s.stories), 4, async (st) => {
-    const texts = await Promise.all(st.items.map((it) => fetchArticle(it.link)));
-    // A short feed summary (e.g. a Hacker News discussion link) is not material: writing from it would be guesswork.
-    const bodies = st.items.map((it, i) => texts[i] || (it.summary.length >= MIN_FEED_CHARS ? it.summary : ""));
-    const material = st.items
-      .map((it, i) => bodies[i] && `Source ${i + 1}: [${it.source}] ${it.title}\n${bodies[i]}`)
-      .filter(Boolean)
-      .join("\n\n");
-    st.basis = texts.some(Boolean) ? "article" : material ? "feed" : "none";
-    Object.assign(st, { summary: "", points: [], why: "" });
-    if (material) {
-      try {
-        const d = parseJson(await chat(DETAIL_PROMPT, `Headline: ${st.title}\n\n${material}`));
-        st.summary = String(d.summary || "");
-        st.points = Array.isArray(d.points) ? d.points.map(String).slice(0, 5) : [];
-        st.why = String(d.why || "");
-      } catch (e) {
-        console.warn(`[warn] detail failed for "${st.title}": ${e.message}`);
-      }
+    else if (story.title && story.items.length) {
+      section.stories.push(story);
+      added.push(story);
     }
-    st.sources = st.items.map(toSource);
-    delete st.items;
-  });
-  return sections;
+  }
+  return added;
 }
 
-function rawBrief(items) {
-  const stories = items.map((it) => ({ title: it.title, summary: it.summary, points: [], why: "", basis: "feed", sources: [toSource(it)] }));
-  return [{ title: "Raw", stories }];
+// Stage 2 for one story: fetch its articles, write the detail, and replace its items with sources.
+async function writeDetail(st) {
+  const texts = await Promise.all(st.items.map((it) => fetchArticle(it.link)));
+  // A short feed summary (e.g. a Hacker News discussion link) is not material: writing from it would be guesswork.
+  const bodies = st.items.map((it, i) => texts[i] || (it.summary.length >= MIN_FEED_CHARS ? it.summary : ""));
+  const material = st.items
+    .map((it, i) => bodies[i] && `Source ${i + 1}: [${it.source}] ${it.title}\n${bodies[i]}`)
+    .filter(Boolean)
+    .join("\n\n");
+  st.basis = texts.some(Boolean) ? "article" : material ? "feed" : "none";
+  Object.assign(st, { summary: "", points: [], why: "" });
+  if (material) {
+    try {
+      const d = parseJson(await chat(DETAIL_PROMPT, `Headline: ${st.title}\n\n${material}`));
+      st.summary = String(d.summary || "");
+      st.points = Array.isArray(d.points) ? d.points.map(String).slice(0, 5) : [];
+      st.why = String(d.why || "");
+    } catch (e) {
+      console.warn(`[warn] detail failed for "${st.title}": ${e.message}`);
+    }
+  }
+  st.sources = st.items.map(toSource);
+  delete st.items;
+}
+
+// --no-ai: every fresh item becomes a story in the first section.
+function addRawStories(items, sections) {
+  const added = items.map((it) => ({ title: it.title, summary: it.summary, points: [], why: "", basis: "feed", sources: [toSource(it)] }));
+  sections[0].stories.push(...added);
+  return added;
 }
 
 // Markdown for the Issue and for the no-JavaScript fallback of the site.
@@ -294,28 +305,55 @@ async function writeSite(date, title, body, brief) {
 
 // ---------- main ----------
 
-const date = new Date().toLocaleDateString("sv-SE", { timeZone: TIME_ZONE });
-const items = await collect();
-console.log(`Collected ${items.length} items since ${new Date(since).toISOString()}`);
+// Tells the workflow whether the site changed, so it can skip the Pages deploy.
+async function setOutput(changed) {
+  if (process.env.GITHUB_OUTPUT) await appendFile(process.env.GITHUB_OUTPUT, `changed=${changed}\n`);
+}
 
-if (items.length === 0) {
+const date = new Date().toLocaleDateString("sv-SE", { timeZone: TIME_ZONE });
+const previous = await readFile(new URL(`../docs/data/${date}.json`, import.meta.url), "utf8").then(JSON.parse, () => null);
+// Links already handled today (kept or dropped), so each item is planned only once.
+// Source links of existing stories count too (data written before "seen" existed).
+const seen = new Set([
+  ...(previous?.seen || []),
+  ...(previous?.sections || []).flatMap((s) => s.stories.flatMap((st) => st.sources.map((x) => x.url))),
+]);
+// Today's stories so far, in the current config order.
+const sections = config.sections.map((title) => ({
+  title,
+  stories: previous?.sections.find((s) => s.title === title)?.stories || [],
+}));
+
+const items = await collect();
+const fresh = items.filter((it) => !seen.has(it.link));
+console.log(`Collected ${items.length} items since ${new Date(since).toISOString()}, ${fresh.length} new`);
+
+if (fresh.length === 0) {
   console.log("Nothing new, skip.");
+  await setOutput(false);
   process.exit(0);
 }
 
-const sections = NO_AI ? rawBrief(items) : await buildBrief(items);
-const stories = sections.flatMap((s) => s.stories);
-const byBasis = (b) => stories.filter((s) => s.basis === b).length;
-console.log(`Stories: ${stories.length} (article ${byBasis("article")}, feed ${byBasis("feed")}, none ${byBasis("none")})`);
+const added = NO_AI ? addRawStories(fresh, sections) : await planStories(fresh, sections);
+if (!NO_AI) await mapLimit(added, 4, writeDetail);
+fresh.forEach((it) => seen.add(it.link));
+const byBasis = (b) => added.filter((s) => s.basis === b).length;
+console.log(`Added ${added.length} stories (article ${byBasis("article")}, feed ${byBasis("feed")}, none ${byBasis("none")})`);
 
-const footer = `Generated by ai-daily-brief · ${stories.length} stories from ${items.length} items · ${NO_AI ? "raw" : MODEL}`;
+const stories = sections.flatMap((s) => s.stories);
+const time = new Date().toLocaleTimeString("en-GB", { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
+const footer = `Generated by ai-daily-brief · ${stories.length} stories from ${seen.size} items · ${NO_AI ? "raw" : MODEL} · last update ${time}`;
 const body = `${toMarkdown(sections)}\n\n---\n<sub>${footer}</sub>`;
 const title = `AI Daily Brief ${date}`;
 
 if (DRY_RUN) {
-  console.log(`\n# ${title}\n\n${body}\n\n${JSON.stringify(sections, null, 2)}`);
+  console.log(`\n# ${title}\n\n${body}\n\n${JSON.stringify(added, null, 2)}`);
 } else {
-  await writeSite(date, title, body, { date, footer, sections });
-  console.log(`Site updated: docs/briefs/${date}.md`);
-  console.log(`Issue ${await upsertIssue(title, body)}`);
+  // Always save "seen", even when nothing was added, so dropped items are not planned again.
+  await writeSite(date, title, body, { date, footer, sections, seen: [...seen] });
+  if (added.length) {
+    console.log(`Site updated: docs/briefs/${date}.md`);
+    console.log(`Issue ${await upsertIssue(title, body)}`);
+  }
+  await setOutput(added.length > 0);
 }

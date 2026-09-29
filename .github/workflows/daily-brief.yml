@@ -2,7 +2,8 @@ name: AI Daily Brief
 
 on:
   schedule:
-    - cron: "17 0,4,10 * * *" # 08:17, 12:17, 18:17 Beijing (UTC+8); off the hour to avoid dropped runs
+    # Every 15 minutes, off the hour. Runs without new items exit early (no model calls, no deploy).
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -19,15 +20,15 @@ jobs:
   brief:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+    outputs:
+      changed: ${{ steps.brief.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm run brief
+      - id: brief
+        run: npm run brief
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_BASE_URL: ${{ vars.OPENAI_BASE_URL }}
@@ -39,6 +40,18 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs
           git diff --cached --quiet || (git commit -m "chore: daily brief $(date -u +%F)" && git push)
+
+  deploy:
+    needs: brief
+    if: needs.brief.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/configure-pages@v5
       - uses: actions/jekyll-build-pages@v1
         with:
