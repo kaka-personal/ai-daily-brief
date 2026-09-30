@@ -24,6 +24,9 @@ brief_date: "2026-09-30"
 - **Meta面向中小企业开放Muse智能体平台并引入前MongoDB CEO**: Meta面向中小企业开放Muse智能体平台，并聘请原MongoDB首席执行官领导新成立的企业平台部门。 [source](https://techcrunch.com/2026/09/29/meta-is-expanding-its-ai-agent-muse-to-small-businesses/) · [source](https://techcrunch.com/2026/09/28/meta-launches-enterprise-ai-platform-hires-mongodb-ceo-to-lead-new-initiative/)
 - **Shopify向基于浏览器的AI代理开放结账支付权限**: Shopify 宣布 WebMCP 支持结账功能，允许浏览器端的 AI 代理在用户授权下直接完成商品购买。 [source](https://techcrunch.com/2026/09/28/shopify-opens-checkout-to-browser-based-ai-agents/)
 - **Google取消Gemini Gems功能，转向AI技能开发**: Google 宣布将 Gemini 的 Gems 功能迁移至“技能”（skills），以整合任务驱动型 AI。 [source](https://techcrunch.com/2026/09/28/google-is-killing-off-geminis-gems-in-favor-of-skills/)
+- **美国政府上线 America.gov 聊天机器人协助处理官僚事务**: 美国政府推出 America.gov AI 聊天机器人，旨在简化公民查询政府服务和处理官僚事务的流程。 [source](https://techcrunch.com/2026/09/29/america-gov-gets-really-weird-when-you-ask-it-about-minecraft-but-its-not-a-glitch/) · [source](https://techcrunch.com/2026/09/29/can-a-chatbot-fix-the-government-maze-the-white-house-is-about-to-find-out/)
+- **xAI 旗下百科平台 Grokipedia 恢复内容更新**: Elon Musk 旗下的 AI 百科平台 Grokipedia 在停更数月后恢复内容更新，并计划推出 v0.2 版本。 [source](https://www.theverge.com/tech/1002448/elon-musk-grokipedia-ai-updating-again)
+- **Wabi 转型为按需生成界面的个人 AI 智能体**: Wabi 转型为按需生成界面的个人 AI 智能体，将对话交互与功能性微型应用相结合。 [source](https://techcrunch.com/2026/09/29/ai-powered-app-maker-wabi-pivots-to-a-messaging-experience/)
 
 ## 研究论文
 
@@ -31,6 +34,7 @@ brief_date: "2026-09-30"
 - **Web与移动端对话式AI代理的隐私分析研究报告**: 该研究报告对 Web 与移动端对话式 AI 代理的隐私安全性进行了系统性的分析与评估。 [source](https://jorgegarciaherrero.com/wp-content/interactivos/20260916-Prompt-like-a-butterfly-sting-like-a-tracker-(clean).pdf)
 - **OpenAI发布针对前沿模型训练的安全案例准则**: OpenAI发布针对前沿AI模型训练的初期安全案例准则，涵盖技术保障、运营实践及对齐失效调查。 [source](https://openai.com/index/towards-safety-cases-for-frontier-ai-training)
 - **佛罗里达州总检察长寻求禁止ChatGPT模拟人类属性**: 佛罗里达州总检察长 James Uthmeier 请求法院禁止 OpenAI 赋予 ChatGPT 人类属性，以防误导用户产生虚假信任。 [source](https://www.theverge.com/ai-artificial-intelligence/1001527/chatgpt-florida-ban-first-person-human-attributes-kids)
+- **Anthropic 红队测试显示 GLM-5.3 具备初步控制流劫持能力**: Anthropic 红队测试发现 GLM-5.3 在内部基准测试中展现出初步的控制流劫持能力，标志着模型网络安全能力的突破。 [source](https://simonwillison.net/2026/Sep/29/anthropic-frontier-red-team/)
 
 ## 开源工具
 
@@ -46,6 +50,9 @@ brief_date: "2026-09-30"
 - **诺因智能完成累计超10亿元融资，加速家用模型落地**: 诺因智能完成累计超10亿元融资，加速推动GLOW具身大模型与KNOWIN-X1机器人的家用量产落地。 [source](https://www.qbitai.com/2026/09/499135.html)
 - **Peak XV公布最新Surge初创名单，AI项目占半数以上**: Peak XV公布Surge 12初创名单，包含18家公司，其中超半数为AI项目，单笔投资上限提升至500万美元。 [source](https://techcrunch.com/2026/09/28/peak-xv-goes-bigger-at-seed-with-new-surge-cohort-as-series-a-bar-rises/)
 - **推理服务商Modal Labs即将完成7.5亿美元融资**: AI推理基础设施提供商Modal Labs即将完成7.5亿美元融资，估值在四个月内飙升至157.5亿美元。 [source](https://techcrunch.com/2026/09/28/source-inference-provider-modal-labs-closing-in-on-750m-round-at-15-75b-valuation/)
+- **OpenAI 拟以 1.4 万亿美元估值融资 300 亿美元**: OpenAI 拟以 1.4 万亿美元估值融资 300 亿美元，并将 IPO 推迟至 2027 年以优先解决 AI 安全风险。 [source](https://techcrunch.com/2026/09/29/openai-repotedly-in-talks-to-raise-30b-round-at-1-4t-valuation/)
+- **报告称 AI 行业每年需 6 万亿美元营收以支撑硬件热潮**: 贝恩报告指出，到2031年AI行业每年需创造6万亿美元营收，以支撑持续激增的数据中心基础设施投资。 [source](https://www.thenationalnews.com/future/technology/2026/09/29/ai-industry-needs-to-earn-6-trillion-by-2031-to-justify-data-centres/)
+- **xAI 收购 dot.com 域名并重定向至 Grok 聊天机器人**: 马斯克旗下的 xAI 收购了 dot.com 域名并将其重定向至 Grok，疑似针对 OpenAI 新品 Dots 进行狙击。 [source](https://techcrunch.com/2026/09/29/the-internet-is-convinced-elon-musks-xai-trolled-openais-dots-launch/)
 
 ## 政策安全
 
@@ -54,6 +61,10 @@ brief_date: "2026-09-30"
 - **AI数据中心扩张引发气候周参与者争议**: 纽约气候周期间，AI数据中心的扩张引发争议，虽为能源初创公司带来融资机遇，却也面临环境影响和资源分配的质疑。 [source](https://techcrunch.com/2026/09/28/the-ai-boom-took-over-climate-week-and-not-everyone-is-happy-about-it/)
 - **AI加剧网络攻击威胁，医疗与金融机构安全形势严峻**: AI 代理正显著提升网络攻击的规模与效率，使缺乏防护资源的中小型医疗和金融机构面临严峻安全威胁。 [source](https://www.theverge.com/ai-artificial-intelligence/1001427/ai-is-supercharging-hacking-and-your-local-hospitals-and-banks-arent-ready)
 - **OpenAI在处理数学突破的发布与社区关系上饱受质疑**: OpenAI在发布数学突破时因处理不当导致与数学界关系紧张，为此咨询了新成立的独立顾问小组AGMAI。 [source](https://www.theverge.com/ai-artificial-intelligence/1001477/openai-math-advisory-group)
+- **特朗普签署行政令要求美政府统一使用“Super Intelligence”术语**: 特朗普签署行政令，要求美国政府机构在官方文件和政策中统一使用 Super Intelligence 术语取代 AI。 [source](https://www.theverge.com/policy/1002468/trump-ai-superintelligence-executive-order-ai)
+- **OpenAI 被曝正私下与 NVIDIA 合作开发智能体安全平台**: OpenAI 虽然未公开加入 NVIDIA 的智能体安全联盟，但正私下与其合作开发旨在防止智能体失控的安全技术。 [source](https://techcrunch.com/2026/09/29/heres-why-openai-is-absent-from-nvidias-industry-wide-effort-to-end-rogue-ai-agents/)
+- **AI 研究人员警告超智能导致人类灭绝的可能性接近一半**: 多位顶级 AI 实验室研究员警告，超智能 AI 导致人类灭绝的概率极高，部分专家认为风险甚至高达 50%。 [source](https://www.theverge.com/ai-artificial-intelligence/1002238/openai-google-anthropic-ai-researchers-safety-interviews)
+- **DraftKings 利用 AI 针对成瘾性博彩者进行行为分析营销**: DraftKings 利用 AI 分析投注记录，精准向容易输钱及成瘾的博彩者推送广告，引发 EFF 对行为广告伦理的强烈批评。 [source](https://www.eff.org/deeplinks/2026/09/draftkings-using-ai-supercharge-harms-online-behavioral-advertising)
 
 ---
-<sub>Generated by ai-daily-brief · 31 stories from 46 items · gemini-3-flash-preview · last update 00:30</sub>
+<sub>Generated by ai-daily-brief · 42 stories from 70 items · gemini-3-flash-preview · last update 08:01</sub>
