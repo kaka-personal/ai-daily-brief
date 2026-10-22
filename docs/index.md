@@ -16,6 +16,9 @@ brief_date: "2026-10-22"
 - **Recursive 发布能实现自我改进的笔记本端编程模型 Flint**: AI初创公司Recursive发布Flint，这是一个由其系统自主构建、可在笔记本端运行且支持自我改进的开源编程模型。 [source](https://techcrunch.com/2026/10/21/recursive-launches-flint-a-laptop-coding-model-it-says-was-largely-built-by-ai/)
 - **IBM 发布 Granite Speech 5.0 语音模型**: IBM 发布 Granite Speech 5.0 语音模型系列，涵盖转录、翻译及说话人识别，并采用 Apache 2.0 协议开源。 [source](https://huggingface.co/blog/ibm-granite/granite-speech-5)
 - **NVIDIA 发布 Kumo 关系型数据机器学习模型**: NVIDIA发布Kumo Relational，这是一款无需特定训练、可直接在关系型数据库上进行预测的基础模型。 [source](https://huggingface.co/blog/nvidia/kumo-relational)
+- **蚂蚁数科发布决策模型 LingDT-Decision-1.0**: 蚂蚁数科发布决策模型 LingDT-Decision-1.0，专为产业 AI 场景提供高性能、低成本的结构化决策能力。 [source](https://www.qbitai.com/2026/10/504879.html)
+- **IBM Granite 推出时间序列集成预测方案**: IBM推出Granite时间序列集成方案，结合四种预训练架构，无需微调即可在多种预测任务中提供稳健表现。 [source](https://huggingface.co/blog/ibm-research/granite-timeseries-ensemble-r1)
+- **中国电信开源意图理解专用模型 Xing4.0-29B-Intent**: 中国电信开源星辰意图理解专用模型Xing4.0-29B-Intent，支持高精度意图识别与参数抽取，响应时延达百毫秒级。 [source](https://www.qbitai.com/2026/10/504832.html)
 
 ## 产品应用
 
@@ -25,15 +28,22 @@ brief_date: "2026-10-22"
 - **AT&T 利用 OpenAI 重构内部法律知识获取流程** [source](https://openai.com/index/att-legal)
 - **ChatGPT 广告业务扩张至 26 国并披露技术架构**: OpenAI 将 ChatGPT 广告业务扩展至 26 国，并披露了基于 LLM 构建、旨在平衡相关性与用户信任的技术架构。 [source](https://openai.com/index/chatgpt-ads-expands-26-new-countries) · [source](https://openai.com/index/building-chatgpt-ad-stack)
 - **利用 Claude 缩减代码攻击面的实践案例**: Anthropic 展示了利用 Claude 自动分析并缩减大型开源项目攻击面的实践，在 25 个项目中发现了 493 个安全风险。 [source](https://www.anthropic.com/research/attack-surface-reduction)
+- **1Password 推出 1Password for Agents 支持智能体安全登录**: 1Password 推出 1Password for Agents，允许 AI 智能体在不接触明文密码的情况下安全登录用户账号。 [source](https://www.theverge.com/ai-artificial-intelligence/1016399/1password-ai-agent-password-sign-in)
+- **特斯拉披露 FSD 用户增长数据并计划推进中国市场落地**: 特斯拉Q3财报显示FSD活跃付费用户达174万，正积极推动该技术在中国市场的准入与落地。 [source](https://www.qbitai.com/2026/10/504841.html)
 
 ## 研究论文
 
 - **OpenAI 与 Scripps Research 利用 AI 智能体发现生物数据线索** [source](https://openai.com/index/scaling-ai-research-for-complex-biological-data/) · [source](https://openai.com/index/scaling-ai-research-for-complex-biological-data)
 - **研究显示优化局部词汇表可降低 SLM 推理成本达 77%**: Dharma-AI 推出 VocabX 方法，通过为特定领域优化小模型词汇表，在不改变模型的情况下将推理成本降低 77%。 [source](https://huggingface.co/blog/Dharma-AI/vocabx-vocabulary-specialization)
+- **Google DeepMind 利用 AI 绘制全球森林类型高分辨率地图** [source](https://deepmind.google/blog/beyond-tree-cover-mapping-the-worlds-forest-types/)
+- **研究显示 Claude 在独立研发复杂抗毒剂药物方面仍存局限**: 投资公司 Citrini 与 Anthropic 合作尝试利用 Claude 研发蝎毒抗毒剂，虽识别出潜在蛋白质，但未能研制出实际可用的药物。 [source](https://www.theverge.com/ai-artificial-intelligence/1016443/anthropic-claude-citrini-vibecoding-scorpion-antivenom)
 
 ## 开源工具
 
 - **AWS Trainium 上的 TorchNeuron 系统级性能分析指南**: Amazon 发布针对 AWS Trainium 芯片的 TorchNeuron 系统级性能分析指南，助力开发者优化推理性能。 [source](https://huggingface.co/blog/amazon/profiling-torchneuron-part-1)
+- **OpenAI CLI 命令行工具发布**: OpenAI 发布官方命令行工具 OpenAI CLI，支持通过终端直接调用 REST API 进行模型交互与管理。 [source](https://github.com/openai/openai-cli)
+- **WorldTUI：可模拟终端环境的 360M 轻量级模型**: WorldTUI 是一个 360M 轻量级模型，无需真实文件系统即可通过预测屏幕变化完整模拟终端交互环境。 [source](https://simedw.com/2026/10/21/world-model-terminal/)
+- **Omnara：Claude 托管智能体的开源替代方案**: Omnara 是一个开源的托管智能体平台，旨在作为 Claude Managed Agents 和 OpenAI Agents API 的自托管替代方案。 [source](https://github.com/omnara-ai/omnara)
 
 ## 行业资本
 
@@ -42,6 +52,10 @@ brief_date: "2026-10-22"
 - **调查显示 AI 导致过半管理者难以评估员工表现**: 调查显示，超过50%的管理者因AI介入难以评估员工表现，近半数经理需花费更多时间审核及引导团队产出。 [source](https://techcrunch.com/2026/10/21/ai-promises-productivity-but-for-managers-its-mostly-a-headache-for-now-says-new-survey/)
 - **飞书举办豆包工作 AI 先锋挑战赛**: 飞书举办豆包工作AI挑战赛，让学生利用AI解决真实业务难题，强调人才需具备实际成果交付力而非仅会使用工具。 [source](https://www.qbitai.com/2026/10/504608.html)
 - **Meta 拟发行新类别股票以筹措 AI 投资资金**: Meta 计划发行新类别无投票权股票，旨在为大规模 AI 基础设施投资、人才招聘及潜在收购筹集资金。 [source](https://www.theverge.com/tech/1015799/meta-shares-class-ai-q3-2026-earnings)
+- **DeepSeek 据报完成 150 亿美元巨额融资**: 据报道，DeepSeek 完成约 150 亿美元融资，为中国规模最大的融资轮次之一，腾讯及宁德时代或参与投资。 [source](https://techcrunch.com/2026/10/22/deepseek-reportedly-raises-15b-days-after-us-restrictions/)
+- **AI 硬件初创公司 Nirva 融资 3300 万美元开发 AI 吊坠**: AI 硬件初创公司 Nirva 融资 3300 万美元，推出仅记录佩戴者声音的 AI 吊坠。 [source](https://techcrunch.com/2026/10/22/nirva-raises-33m-for-a-pendant-that-only-listens-to-you/)
+- **调研揭秘 OpenAI 具身智能物理数据的核心供应链**: 调研显示初创公司 Maxinsights 已成为 OpenAI 等顶尖具身智能厂商的核心供应商，提供数百万小时的第一人称物理数据。 [source](https://www.qbitai.com/2026/10/504800.html)
+- **OpenAI 详解“前瞻部署工程师 (FDE)”岗位职能** [source](https://openai.com/index/forward-deployed-engineering-means)
 
 ## 政策安全
 
@@ -49,6 +63,7 @@ brief_date: "2026-10-22"
 - **OpenAI 启动 Patch the Planet 开源漏洞修复协调计划** [source](https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities)
 - **OpenAI 发布合作伙伴分发安全与使用政策标准**: OpenAI 发布合作伙伴分发标准，旨在确保分发渠道在维护安全措施、负责任访问和使用政策方面与官方保持一致。 [source](https://openai.com/index/broad-access-through-consistent-standards)
 - **数据中心扩张潮或导致德州空气质量回退至二十年前水平**: HARC报告预警，数据中心扩张带来的电力需求激增，可能导致德州空气污染水平在五年内退回至二十年前水平。 [source](https://www.theverge.com/ai-artificial-intelligence/1015958/data-center-pollution-rising-report)
+- **AI 陪伴机器人 Eiliko 因隐私泄露漏洞聘请安全审计**: 针对 Eiliko 机器人严重的隐私泄露问题，母公司 Energize Lab 宣布聘请独立安全审计并下线敏感功能。 [source](https://www.theverge.com/news/1015824/eiliko-energize-lab-statement-on-robot-hack-breach)
 
 ---
-<sub>Generated by ai-daily-brief · 26 stories from 36 items · gemini-3-flash-preview · last update 12:00</sub>
+<sub>Generated by ai-daily-brief · 41 stories from 55 items · gemini-3-flash-preview · last update 23:04</sub>
