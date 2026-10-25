@@ -1,38 +1,26 @@
 ---
-title: AI Daily Brief 2026-10-24
-brief_date: "2026-10-24"
+title: AI Daily Brief 2026-10-25
+brief_date: "2026-10-25"
 ---
 
 ## 今日要点
 
-- **OpenAI 采用离线环境训练前沿模型以规避黑客风险**: OpenAI 为规避黑客攻击风险，宣布采用离线环境和缓存数据训练前沿模型，停止让其在训练中直接访问互联网。 [source](https://techcrunch.com/2026/10/23/openai-says-it-will-no-longer-train-its-ai-models-on-the-live-internet-citing-significant-risks/) · [source](https://www.theverge.com/ai-artificial-intelligence/1018021/openai-training-top-ai-models-no-internet) · [source](https://openai.com/index/securing-our-frontier-model-training-environment)
-- **Moonshot 发布 Kimi K3.1 Pro 并承诺明年开源模型权重**: 月之暗面发布 Kimi K3.1 Pro 模型，性能对标 GPT-6 Astra，并承诺于 2026 年 11 月开源全部权重。 [source](https://simonwillison.net/2026/Oct/23/kimi-k31-pro/)
-- **Jack Dorsey 旗下 Block 发布拟人化全双工语音模型 Dessa**: Jack Dorsey 旗下的 Block 发布拟人化全双工语音模型 Dessa，完全基于人类语音训练且不依赖文本。 [source](https://www.theverge.com/ai-artificial-intelligence/1017906/jack-dorsey-block-dessa-ai-voice-speech) · [source](https://block.xyz/dessa)
-- **瑞典政府部门宣布禁用 ChatGPT 与 Claude 以防泄密**: 瑞典政府部门宣布禁用 ChatGPT 与 Claude，旨在防止敏感信息泄露并引导员工转向受监管的内部平台。 [source](https://www.sverigesradio.se/artikel/chat-gpt-och-claude-forbjuder-regeringskansliet)
-- **Google 更新隐私政策，或利用 Gmail 与照片数据训练 AI 投放广告**: Google更新隐私政策，若用户开启AI个性化功能，其Gmail、Drive和照片数据可能被用于投放定向广告。 [source](https://www.theverge.com/tech/1017600/google-personal-intelligence-privacy-policy-ads-update)
+- **非科技行业 AI 投资回报目前仍不明显**: 尽管科技巨头获益，但非科技行业（S&P 493）的 AI 投资目前在收入、利润和生产率上均未见明显回报。 [source](https://www.apollo.com/wealth/insights-news/insights/daily-spark/no-signs-of-ai-payoff-outside-the-tech-sector)
+- **Block 发布高度拟人化语音模型，支持本地运行**: Jack Dorsey 旗下的 Block 发布拟人化语音模型 Dessa，支持在 MacBook 等消费级设备上本地运行。 [source](https://techcrunch.com/2026/10/24/blocks-new-voice-model-sounds-eerily-human/)
+- **宾夕法尼亚州立法要求 AI 生成广告添加标识**: 宾夕法尼亚州签署法案，要求对 AI 生成或显著修改的广告添加强制披露标识。 [source](https://www.theverge.com/ai-artificial-intelligence/1018187/pennsylvania-ai-deceptive-advertising-act)
+- **研究显示 Grok 与 OpenAI 模型在选举推荐中存在明显政治倾向差异**: 研究发现 Grok 倾向于共和党而 GPT 倾向于民主党，两者在选举候选人推荐中的一致性不足 10%。 [source](https://techcrunch.com/2026/10/24/forced-to-pick-groks-ai-model-chooses-republicans-openais-picks-democrats/)
+- **AI 项目“坟场”：盘点那些未能达标的 AI 明星项目与公司**: 随着竞争加剧，从 OpenAI 的超级应用到 Humane 的硬件，大批 AI 明星项目因技术挑战、隐私争议或市场错位而陷入“坟场”。 [source](https://techcrunch.com/2026/10/24/the-ai-graveyard-a-running-list-of-projects-and-startups-that-didnt-make-it/)
 
 ## 产品应用
 
-- **Nvidia CEO 演示 Microduck 机器人，销量已突破 2 万台**: Nvidia首席执行官黄仁勋演示了Microduck开源机器人，受其可爱互动吸引，该产品在演示后预售量迅速突破2万台。 [source](https://techcrunch.com/2026/10/23/hottest-toy-for-christmas-nvidia-ceo-plays-with-adorable-microduck-robots-20000-sell/)
-- **OpenAI 分享如何为 10 亿 ChatGPT 用户扩展在线存储架构** [source](https://openai.com/index/scaling-storage-one-billion-users-part-two)
-- **inDrive 携手 Pony.ai 与 Nvidia 计划在 2027 年测试无人驾驶出租车**: inDrive与Pony.ai及Nvidia合作，计划于2027年上半年在哈萨克斯坦首都启动无人驾驶出租车测试。 [source](https://techcrunch.com/2026/10/22/uber-rival-indrive-eyes-2027-robotaxi-tests-in-central-asia-with-pony-ai-and-nvidia/)
-- **AI 技术在老游戏模拟与重制领域引发病毒式传播**: AI工具正加速老游戏的逆向工程与移植，虽提高效率并催生多个病毒式项目，但也因破坏协作生态引发社区分裂。 [source](https://www.theverge.com/ai-artificial-intelligence/1015430/ai-retro-games-decomp-recomp-port)
+- **值得关注的短信端 AI Agent 清单**: 多款基于短信和即时通讯工具的 AI Agent 崭露头角，无需下载新 App 即可实现日程安排、任务执行和主动提醒功能。 [source](https://techcrunch.com/2026/10/24/all-the-ai-agents-that-can-live-in-your-text-messages/)
+- **游戏 Battledrones v14 发布，支持 AI 玩家与四人对战模式**: 移动端 Web 即时战略游戏 Battledrones 发布 v14 版本，引入支持四人对战的 Compass Rose 地图及 AI 玩家。 [source](https://simonwillison.net/2026/Oct/24/battledrones/)
+- **《蓝色星球 III》保留镜头瑕疵以在 AI 时代展现真实性**: BBC《蓝色星球 III》决定保留画面瑕疵，通过展示真实的海水杂质和环境干扰，以对抗AI视频的过度完美感。 [source](https://www.theverge.com/ai-artificial-intelligence/1018205/blue-planet-iii-authentic-organic-ai)
 
 ## 研究论文
 
-- **MIT 研究：AI Agent 在无人干预下会自主发明游戏并提升协作能力**: MIT研究显示，Claude驱动的AI Agent在虚拟环境中会自发“玩耍”并自主习得复杂技能，表现优于传统训练模型。 [source](https://techcrunch.com/2026/10/22/left-alone-with-nothing-to-do-ai-agents-started-playing/)
-- **研究显示：德克萨斯州处理同个 AI 请求的碳排放量是瑞典的 8.5 倍**: 瑞典 AI 服务商 Berget AI 发布开源工具，计算显示相同 AI 请求在德州的碳排放量是瑞典的 8.5 倍。 [source](https://berget.ai/en/blog/per-request-co2-press-release)
-- **LitPivot：利用文献景观动态上下文开发研究思路**: Ai2 与宾大合作开发了 LitPivot 系统，通过将研究构思与动态文献语境相结合，辅助研究人员进行高效的学术转向与方案优化。 [source](https://huggingface.co/blog/allenai/litpivot)
-
-## 开源工具
-
-- **Quick Study：利用 Claude Artifacts 实现照片快速绘图模拟**: Simon Willison 展示了如何利用 Claude Artifacts 构建一个能在几秒内通过模拟画笔效果重绘照片的 Canvas 应用。 [source](https://simonwillison.net/2026/Oct/23/quick-study-painter/)
-- **Corgi：集成 AI Agent 的终端复用工具** [source](https://corgi.computer/)
-
-## 政策安全
-
-- **Meta 因出版商反对 AI 抓取内容而推迟更新业务条款**: Meta 因出版商担忧其内容被用于 AI 训练而推迟更新业务条款，生效日期从 10 月底延至 11 月 20 日。 [source](https://www.theverge.com/tech/1017450/meta-business-terms-delayed-ai-scraping)
-- **黑客发现三星电视内置 AI 监听功能导致 OpenAI 账号被封** [source](https://www.reddit.com/r/antiai/comments/1xdv3e5/hacker_reverse_engineers_his_samsung_tv_and_finds/)
+- **深度探讨：为何 AI 生成的语言有时难以被人理解**: 研究发现，AI生成的文本因过度追求信息密度而非交流优化，导致其在语法和词汇上增加了人类的理解难度。 [source](https://arxiv.org/abs/2610.29162)
+- **AI 辅助学术论文被曝引用并不存在的虚假文献**: 发表在同行评审期刊上的一篇关于 Z-Library 的学术论文被曝使用 AI 捏造了多处虚假参考文献。 [source](https://torrentfreak.com/ai-assisted-paper-on-z-library-cites-a-torrentfreak-article-that-doesnt-exist/)
 
 ---
-<sub>Generated by ai-daily-brief · 16 stories from 23 items · gemini-3-flash-preview · last update 21:57</sub>
+<sub>Generated by ai-daily-brief · 10 stories from 10 items · gemini-3-flash-preview · last update 08:01</sub>
