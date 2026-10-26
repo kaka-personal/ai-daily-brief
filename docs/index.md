@@ -1,41 +1,30 @@
 ---
-title: AI Daily Brief 2026-10-25
-brief_date: "2026-10-25"
+title: AI Daily Brief 2026-10-26
+brief_date: "2026-10-26"
 ---
 
 ## 今日要点
 
-- **非科技行业 AI 投资回报目前仍不明显**: 尽管科技巨头获益，但非科技行业（S&P 493）的 AI 投资目前在收入、利润和生产率上均未见明显回报。 [source](https://www.apollo.com/wealth/insights-news/insights/daily-spark/no-signs-of-ai-payoff-outside-the-tech-sector)
-- **Block 发布高度拟人化语音模型，支持本地运行**: Jack Dorsey 旗下的 Block 发布拟人化语音模型 Dessa，支持在 MacBook 等消费级设备上本地运行。 [source](https://techcrunch.com/2026/10/24/blocks-new-voice-model-sounds-eerily-human/)
-- **宾夕法尼亚州立法要求 AI 生成广告添加标识**: 宾夕法尼亚州签署法案，要求对 AI 生成或显著修改的广告添加强制披露标识。 [source](https://www.theverge.com/ai-artificial-intelligence/1018187/pennsylvania-ai-deceptive-advertising-act)
-- **研究显示 Grok 与 OpenAI 模型在选举推荐中存在明显政治倾向差异**: 研究发现 Grok 倾向于共和党而 GPT 倾向于民主党，两者在选举候选人推荐中的一致性不足 10%。 [source](https://techcrunch.com/2026/10/24/forced-to-pick-groks-ai-model-chooses-republicans-openais-picks-democrats/)
-- **AI 项目“坟场”：盘点那些未能达标的 AI 明星项目与公司**: 随着竞争加剧，从 OpenAI 的超级应用到 Humane 的硬件，大批 AI 明星项目因技术挑战、隐私争议或市场错位而陷入“坟场”。 [source](https://techcrunch.com/2026/10/24/the-ai-graveyard-a-running-list-of-projects-and-startups-that-didnt-make-it/)
-
-## 模型发布
-
-- **Cerebras 部署万亿参数 AI 模型**: Cerebras 展示了如何通过多晶圆集群部署万亿参数 AI 模型，并实现每秒超过 1000 个 token 的推理速度。 [source](https://www.cerebras.ai/blog/how-we-deploy-trillion-parameter-frontier-models-on-cerebras)
+- **Cerebras 部署万亿参数级别 AI 模型**: Cerebras 利用 WSE-3T 晶圆集群实现万亿参数模型推理，每秒可生成超过 1,000 个 token。 [source](https://www.cerebras.ai/blog/how-we-deploy-trillion-parameter-frontier-models-on-cerebras)
+- **OpenAI 与 Anthropic 的模型价格在数月内大幅下调**: OpenAI 与 Anthropic 近期展开激烈价格战，LLM 模型使用成本在数月内大幅下调，部分降幅达 80%。 [source](https://minimaxir.com/2026/10/cheap-llms/)
+- **阿波罗经济学家称 AI 尚未对非科技类企业产生财务回报**: 阿波罗首席经济学家指出，除科技巨头外，AI 目前尚未为大多数美国企业带来明显的财务回报或生产力提升。 [source](https://techcrunch.com/2026/10/25/ai-delivers-zero-financial-payoff-to-most-companies-according-to-apollo-economist/)
+- **Reddit 开源社区 r/opensource 禁止所有 AI 相关项目提交**: Reddit 的 r/opensource 社区宣布禁止所有涉及 AI 的项目提交，并对项目成熟度和参与语言设定了严格限制。 [source](https://www.theverge.com/ai-artificial-intelligence/1018217/reddit-opensource-ai-ban)
+- **伯克利教授因学生广泛使用 AI 决定停止批改数学作业**: 伯克利教授、菲尔兹奖得主 Richard Borcherds 因学生普遍使用 AI 获得高分，决定停止对数学作业的准确性进行评分。 [source](https://www.dailycal.org/news/campus/academics/ai-use-leads-uc-berkeley-math-professor-to-see-no-point-in-grading-homework/article_bdf1eae2-c08b-491f-b9f1-81a7cea177de.html)
 
 ## 产品应用
 
-- **值得关注的短信端 AI Agent 清单**: 多款基于短信和即时通讯工具的 AI Agent 崭露头角，无需下载新 App 即可实现日程安排、任务执行和主动提醒功能。 [source](https://techcrunch.com/2026/10/24/all-the-ai-agents-that-can-live-in-your-text-messages/)
-- **游戏 Battledrones v14 发布，支持 AI 玩家与四人对战模式**: 移动端 Web 即时战略游戏 Battledrones 发布 v14 版本，引入支持四人对战的 Compass Rose 地图及 AI 玩家。 [source](https://simonwillison.net/2026/Oct/24/battledrones/)
-- **《蓝色星球 III》保留镜头瑕疵以在 AI 时代展现真实性**: BBC《蓝色星球 III》决定保留画面瑕疵，通过展示真实的海水杂质和环境干扰，以对抗AI视频的过度完美感。 [source](https://www.theverge.com/ai-artificial-intelligence/1018205/blue-planet-iii-authentic-organic-ai)
-- **热门 AI 穿戴设备与硬件清单**: 本文盘点了当前市场上热门的 AI 穿戴设备与硬件，涵盖从生产力转录工具到情感陪伴伴侣等多种应用场景。 [source](https://techcrunch.com/2026/10/25/the-hottest-ai-wearables-and-gadgets-you-should-know-about/)
-
-## 研究论文
-
-- **深度探讨：为何 AI 生成的语言有时难以被人理解**: 研究发现，AI生成的文本因过度追求信息密度而非交流优化，导致其在语法和词汇上增加了人类的理解难度。 [source](https://arxiv.org/abs/2610.29162)
-- **AI 辅助学术论文被曝引用并不存在的虚假文献**: 发表在同行评审期刊上的一篇关于 Z-Library 的学术论文被曝使用 AI 捏造了多处虚假参考文献。 [source](https://torrentfreak.com/ai-assisted-paper-on-z-library-cites-a-torrentfreak-article-that-doesnt-exist/)
+- **Grok 发布 AI 生成视频短片《Odyssey》的前七分钟片段**: Grok发布AI生成剧集《奥德赛》第一集，展示了长达七分钟的视频生成与叙事能力。 [source](https://techcrunch.com/2026/10/25/grok-releases-the-first-seven-minutes-of-its-ai-generated-odyssey/)
+- **盘点当前热门 AI 穿戴设备与便携硬件**: 当前热门 AI 穿戴设备盘点，涵盖从情感伴侣到生产力工具的多种硬件形态与功能。 [source](https://techcrunch.com/2026/10/25/the-hottest-ai-wearables-and-gadgets-you-should-know-about/)
 
 ## 行业资本
 
-- **Google AI 搜索调整对在线出版行业造成持续冲击**: Google AI搜索功能的推出正打破传统的流量分配模式，导致在线出版商访问量大幅下滑，迫使行业寻求转型。 [source](https://www.theverge.com/column/1017983/google-ai-search-online-publishing)
+- **Google 搜索引入 AI 的改动重塑数字出版业格局**: Google 搜索引入 AI 功能打破了出版业依赖流量的生态，导致多家媒体点击率大幅下滑并迫使行业调整经营策略。 [source](https://www.theverge.com/column/1017983/google-ai-search-online-publishing)
+- **尼康摄影大赛冠军因作品检测出 AI 痕迹被取消资格**: 清华大学徐宁因作品被检测出 AI 生成痕迹，被尼康第 16 届微观世界动态摄影大赛取消冠军资格。 [source](https://www.techspot.com/news/114171-nikon-photography-contest-winner-loses-title-after-scientists.html)
 
 ## 政策安全
 
-- **美国媒体与艺术领域流失 20 万岗位，AI 对就业影响引发热议**: 美国媒体与艺术领域近四年流失20万岗位，虽然受多种因素影响，但AI对数字创意产业的冲击引发了广泛关注。 [source](https://www.apricitas.io/p/ai-and-the-fall-of-the-creative-class)
-- **Reddit 开源社区禁止所有 AI 相关项目提交**: Reddit 的 r/opensource 社区宣布禁止所有涉及 AI 的项目提交并限制非英语使用者，引发开发者群体强烈抗议。 [source](https://www.theverge.com/ai-artificial-intelligence/1018217/reddit-opensource-ai-ban)
-- **Samsung 被曝利用 TensorFlow Lite 模型进行用户追踪**: Samsung 被曝利用 TensorFlow Lite 模型处理屏幕截图，通过 AlexNet 识别用户正在运行的游戏。 [source](https://twitter.com/mike64_t/status/2114150399406202896)
+- **探讨 AI 时代账号封禁导致个人“经济无用化”的风险** [source](https://twitter.com/boneGPT/status/2114035719853265264)
+- **三星被曝利用 TensorFlow Lite 模型追踪电视用户行为**: 三星电视被曝利用 TensorFlow Lite 模型处理屏幕截图，以识别并追踪用户正在玩的游戏类型。 [source](https://twitter.com/mike64_t/status/2114150399406202896)
 
 ---
-<sub>Generated by ai-daily-brief · 16 stories from 16 items · gemini-3-flash-preview · last update 22:17</sub>
+<sub>Generated by ai-daily-brief · 11 stories from 11 items · gemini-3-flash-preview · last update 08:01</sub>
