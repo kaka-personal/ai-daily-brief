@@ -24,15 +24,26 @@ brief_date: "2026-10-30"
 - **微软宣布停止对智能电视端 Copilot 的支持**: 微软决定停止对智能电视（包括 LG 和三星）上 Copilot 功能的支持，计划于 2026 年内正式下线。 [source](https://www.theverge.com/tech/1021143/microsoft-lg-samsung-copilot-ai-assistant-smart-tvs-ending)
 - **亚马逊更新 Alexa，通过 AI 优化购物清单与订阅管理**: 亚马逊为 Alexa 更新百余项 AI 购物功能，支持管理清单、订阅、配送指令及处理支付问题。 [source](https://techcrunch.com/2026/10/29/amazon-updates-alexa-to-help-you-manage-shopping-lists-and-subscriptions-and-update-delivery-instructions/)
 - **纽约时报 Cooking 应用测试 AI 食谱修改功能**: 《纽约时报》Cooking 应用测试 AI 辅助修改功能，支持根据现有食材、工具及所需分量实时调整食谱。 [source](https://www.theverge.com/ai-artificial-intelligence/1022193/nyt-cooking-app-ai-recipe-modification-tool)
+- **ChatGPT 订阅用户现可获得 OpenAI API 使用额度**: OpenAI 为特定高额订阅用户提供等额 API 使用额度，允许其抵扣开发费用。 [source](https://simonwillison.net/2026/Oct/29/api-credits/)
+- **Rivian 与大众合资项目将引入 AI 助手**: Rivian 将其 AI 语音助手技术授权给大众汽车，作为双方 58 亿美元合资项目的一部分，助力大众提升软件竞争力。 [source](https://techcrunch.com/2026/10/29/rivian-expands-joint-venture-with-vw-to-include-ai-assistant/)
+- **Meta 推出 AI 时尚应用 Style Sketch**: Meta 推出 AI 时尚应用 Style Sketch，可利用 Instagram 照片构建虚拟衣橱，提供个性化穿搭建议与虚拟试穿。 [source](https://techcrunch.com/2026/10/29/meta-quietly-launches-an-ai-fashion-app-called-style-sketch/)
+- **Gemini 现支持在对话中直接编辑 Google Docs 和 Sheets 等文件**: Google Gemini 现支持在对话界面直接生成、预览并编辑 Google Docs、Sheets 及代码等多种文件格式。 [source](https://www.theverge.com/ai-artificial-intelligence/1022519/google-gemini-file-editing-documents-pdfs)
+- **会议笔记应用 Granola 新增听写功能竞争 Wispr**: AI 会议笔记应用 Granola 在 Mac 端推出全局语音听写功能，直接竞争 Wispr 并推动语音生产力工具的功能融合。 [source](https://techcrunch.com/2026/10/29/granola-crunches-up-a-dictation-feature-to-compete-with-wispr/)
+- **Claude Duet 提升个人助手环境的实用性**: Claude Duet 是一款基于频道管理的个人助手工具，通过高性能响应和层级化权限控制提升了 AI 协作的实用性。 [source](https://fig.blue/posts/duet-is-the-future/)
+- **律师事务所 Ropes & Gray 联手 OpenAI 开发法律尽职调查 AI**: 全球顶级律师事务所 Ropes & Gray 与 OpenAI 合作，共同开发用于处理事务性尽职调查的 AI 辅助工具。 [source](https://openai.com/index/ropes-gray-ai-diligence)
 
 ## 研究论文
 
 - **扩散模型进入 Agent 领域：350 亿参数模型处理速度显著提升**: 扩散智能发布350亿参数扩散语言模型Clover，通过块扩散机制显著提升Agent任务执行速度，处理效率优于自回归模型。 [source](https://www.qbitai.com/2026/10/505934.html)
+- **基于自主 Agent 构建多人游戏世界 Spawn**: 基于 GPT-6.1 与 Fable 模型，AI Agent 在游戏中展现出社会协作能力，并实现了全自动化的持续代码迭代。 [source](https://labs.ycombinator.com/projects/games/index.html) · [source](https://simonwillison.net/2026/Oct/29/how-i-built-the-most-ai-pilled-company-in-the-world/)
+- **在树莓派 Pico 2 W 上运行微型 AI 世界模型**: 在 Pico 2 W 上利用循环 Transformer 实现自主生成并运行游戏的微型 AI 世界模型。 [source](https://github.com/SheepSeb/tinyworldformer)
+- **AI 引用数据溯源研究：揭示“僵尸统计数据”来源**: 研究人员通过向 ChatGPT 等主流 AI 助手提问并追踪千余个引用数据，揭示了 AI 传播“僵尸统计数据”的现象。 [source](https://trakkr.ai/trakkr-research/zombie-stats)
 
 ## 开源工具
 
 - **Project ProtoStar 启动：旨在使公共资助的科学研究具备 AI 就绪性**: Hugging Face 联合多所高校启动 Project ProtoStar，旨在将公款资助的科研成果转化为 AI 就绪格式以提升重用效率。 [source](https://huggingface.co/blog/announcing-project-protostar)
 - **Akai 推出开源 MPC Sample Key，拥抱 AI 驱动的社区改装**: Akai 计划推出开源固件的 MPC Sample Key 采样器，通过开放 SDK 鼓励开发者利用 AI 编写工具进行社区改装。 [source](https://www.theverge.com/gadgets/1021405/akai-open-source-mpc-sample-key)
+- **LLM Voice 语音交互技术探讨**: 文章探讨了 LLM 生成文本引发的“恐怖谷”反应，呼吁作者警惕 LLM Voice 并坚持人类亲自写作以维护思考能力。 [source](https://martinfowler.com/bliki/LLM-Voice.html)
 
 ## 行业资本
 
@@ -44,11 +55,17 @@ brief_date: "2026-10-30"
 - **小雨智造与国家钢结构质检中心共建具身智能焊接实验室**: 小雨智造联手国家钢结构质检中心成立具身智能焊接实验室，旨在将国家级质检标准与具身智能工艺深度融合。 [source](https://www.qbitai.com/2026/10/506273.html)
 - **亚利桑那州数据中心耗水量激增，揭示 AI 发展的资源成本**: 亚利桑那州半导体工厂与数据中心巨大的耗水量正引发水资源危机，导致当地居民对 AI 基础设施扩张产生强烈抵制。 [source](https://www.theverge.com/cs/features/1016650/arizona-water-data-center-tsmc)
 - **Instagram 负责人称针对 AI 的负面情绪可能会继续恶化**: Instagram 负责人 Adam Mosseri 认为，出于对职业取代的担忧，公众对 AI 的负面情绪在未来几年将持续加剧。 [source](https://www.theverge.com/ai-artificial-intelligence/1021644/adam-mosseri-instagram-ai-negativity)
+- **AWS 业务规模预估达 1 万亿美元，将持续扩大 AI 资本支出**: Amazon 首席执行官 Andy Jassy 预测 AWS 年营收将在 5 到 10 年内达 1 万亿美元，为此将持续加大 AI 基础设施投资。 [source](https://techcrunch.com/2026/10/29/aws-will-be-a-1t-business-jassy-says-but-first-it-will-spend-big/)
+- **OpenAI 支持的 Thrive Holdings 斥资 153 亿美元收购 ADT**: OpenAI 支持的 Thrive Holdings 以 153 亿美元收购 ADT，旨在通过 AI 技术重塑传统安防行业。 [source](https://techcrunch.com/2026/10/29/openai-backed-thrive-holdings-acquires-adt/)
+- **受 AI 搜索影响，Reddit 转向登录可见模式**: 面对 AI 搜索导致的流量下滑和数据抓取压力，Reddit 宣布将转向“登录可见”模式，以保护数据并提升广告变现能力。 [source](https://techcrunch.com/2026/10/29/as-search-traffic-dries-up-reddit-announces-its-shifting-to-a-logged-in-experience/)
+- **Proton 内部 AI 策略引发的争议与反思**: Proton 首席执行官激进推动 AI 转型，因强制要求使用 AI 编程并忽视安全流程引发内部动荡。 [source](https://www.404media.co/manifestos-fear-and-loser-thinking-inside-protons-ai-reckoning/)
 
 ## 政策安全
 
 - **Claude Code 被指会定期将背景 Agent 记录发送至服务器**: Claude Code 命令行工具被曝每 30 秒自动发送一次完整 Agent 记录至服务器，仅用于更新 UI 状态提示，造成显著 Token 浪费。 [source](https://gist.github.com/flamerix-ai/c3905705cc4205e5de3011fa2e74efce)
 - **谷歌 AI 在处理美国大选相关敏感查询时表现谨慎**: 谷歌搜索的 AI Mode 在处理美国大选等敏感查询时表现谨慎，通常引导用户查看官方数据而非直接回答。 [source](https://arstechnica.com/ai/2026/10/google-ai-gets-cagey-when-asked-who-won-the-2020-elections/)
+- **OpenAI 发布 Model Spec 更新，引导模型遵循核心价值观** [source](https://openai.com/index/updated-model-spec)
+- **OpenAI 建立分层监控体系以检测前沿模型行为失调**: OpenAI 建立分层监控体系以检测前沿模型失调和未经授权的智能体行为，确保能在安全事故扩大前及时干预。 [source](https://openai.com/index/how-we-detect-frontier-model-misalignment)
 
 ---
-<sub>Generated by ai-daily-brief · 26 stories from 42 items · gemini-3-flash-preview · last update 00:52</sub>
+<sub>Generated by ai-daily-brief · 43 stories from 61 items · gemini-3-flash-preview · last update 08:01</sub>
